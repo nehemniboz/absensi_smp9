@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load auth_extras %}
 
 {% block content %}
   <section class="section">
@@ -12,6 +13,13 @@
     </div>
     <div class="section-body">
      
+      {% if request.user|has_group:"admin" %}
+    <p>Selamat datang Admin!</p>
+{% elif request.user|has_group:"guru" %}
+    <p>Selamat datang Guru!</p>
+{% elif request.user|has_group:"siswa" %}
+    <p>Selamat datang Siswa!</p>
+{% endif %}
 
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit facilis, doloremque itaque debitis minima accusantium! Dolor doloremque magnam repellat sequi mollitia accusantium veritatis, laudantium assumenda, a aliquid velit, fuga nostrum?
     </div>
@@ -21,3 +29,5 @@
 {% block page_js %}
   
 {% endblock %}
+
+
