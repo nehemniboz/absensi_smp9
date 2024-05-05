@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app', 
+    'app',
     'account',
-    'crispy_forms', 
-    'crispy_bootstrap4', 
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'django.contrib.sites',
 
 ]
 
@@ -83,8 +84,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mydb',
         'USER': 'root',
-        'HOST':'localhost',
-        'PORT':'3306',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
