@@ -143,7 +143,7 @@ def render_pdf_view(request):
     template_path = 'qr_pdf.html'
 
     # Or retrieve it based on some condition
-    akun_instance = ProfilSiswa.objects.get(pk=1)
+    akun_instance = ProfilSiswa.objects.first()
 
     # Ensure akun_instance exists before proceeding
     if akun_instance:
