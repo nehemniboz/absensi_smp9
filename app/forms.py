@@ -38,6 +38,7 @@ class ProfilSiswaForm(ProfilBaseForm):
     class Meta:
         model = ProfilSiswa
         fields = '__all__'
+        exclude = ['hash']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

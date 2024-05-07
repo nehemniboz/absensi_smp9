@@ -11,6 +11,7 @@ SECRET_KEY = '6e240d77b96eebbb74d1d37078f38d79fb20fb4fa0f9065c963bd3d3addcde65'
 def get_current_time():
     return datetime.datetime.now().time()
 
+
 def current_year():
     return datetime.date.today().year
 
@@ -102,12 +103,12 @@ class ProfilAdmin(BaseModel):
 class ProfilSiswa(BaseModel):
     angkatan = models.ForeignKey(Angkatan, on_delete=models.CASCADE)
     nisn = models.PositiveIntegerField(
-        validators=[MinValueValidator(100000000), MaxValueValidator(10000000000)], null=True )
+        validators=[MinValueValidator(100000000), MaxValueValidator(10000000000)], null=True)
     hash = models.CharField(max_length=255, null=True)
 
     def generate_hash(self):
         # Using hashlib to generate a SHA-256 hash
-        text_to_hash = f"{self.name}{SECRET_KEY}"
+        text_to_hash = f"{self.user.username}{SECRET_KEY}"
         hash_object = hashlib.sha256(text_to_hash.encode('utf-8'))
         hex_dig = hash_object.hexdigest()
         return hex_dig
@@ -115,13 +116,14 @@ class ProfilSiswa(BaseModel):
     @classmethod
     def get_akun_by_hash(cls, hash_value):
         try:
-            return cls.objects.get(qr_hash=hash_value)
+            return cls.objects.get(hash=hash_value)
         except cls.DoesNotExist:
             return None
 
     def save(self, *args, **kwargs):
-        # Override save method to update qr_hash when saving the object
-        self.qr_hash = self.generate_hash()  # Generate hash when saving
+        # Mengambil nama dari pengguna terkait
+        self.nama = self.user.username  # Memperbarui nama siswa
+        self.hash = self.generate_hash()  # Generate hash when saving
         super().save(*args, **kwargs)
 
     def __str__(self):
