@@ -50,11 +50,10 @@
                 <div class="dropdown-title">Logged in {{ request.user.last_login }}</div>
                 {% comment %} <a href="{% url 'user_profile_update' %}" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a> {% endcomment %}
                 <div class="dropdown-divider"></div>
-                 <form action="{% url 'logout' %}" method="POST">
+                <form action="{% url 'logout' %}" method="POST">
                   {% csrf_token %}
                   <button type="submit" class="dropdown-item has-icon text-danger small d-flex align-items-center"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                </form> 
-                
+                </form>
               </div>
             </li>
           </ul>
@@ -105,13 +104,11 @@
     <script src="{% static 'assets/js/jquery.js' %}"></script>
     <script src="{% static 'assets/js/bootstrap.min.js' %}"></script> {% endcomment %}
 
-
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!--  
+    <!--   
     JSPM Generator Import Map
     Edit URL: https://generator.jspm.io/#U2NjYGBkDM0rySzJSU1hcKiqyMxL18/JTCpKLKp0MNAzMtQzAABgbxE9JAA
-    -->
+     -->
     <script type="importmap">
   {
     "imports": {

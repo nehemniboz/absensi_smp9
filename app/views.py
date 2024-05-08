@@ -1,3 +1,7 @@
+from crispy_forms.layout import Submit
+from crispy_forms.helper import FormHelper
+from . import forms  # Import your custom user creation form
+from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
@@ -31,13 +35,40 @@ def link_callback(uri, rel, request):
     return f"{HOSTNAME}{uri}"
 
 
-@login_required
+# @login_required
+
 def dashboard(request):
+    # if request.method == 'POST':
+    #     form = forms.CustomUserCreationForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('dashboard')  # Redirect to a success page or URL
+    # else:
+    # form = forms.CustomUserCreationForm()
+    user_create_form = forms.CustomUserCreationForm()
+    profil_admin_update_form = forms.ProfilAdminUpdateForm()
+    profil_guru_update_form = forms.ProfilGuruUpdateForm()
+    profil_siswa_update_form = forms.ProfilSiswaUpdateForm()
+    angkatan_create_form = forms.AngkatanCreateForm()
+    angkatan_update_form = forms.AngkatanUpdateForm()
+    jadwal_update_form = forms.JadwalUpdateForm()
+    absensi_create_form = forms.AbsensiCreateForm()
+    absensi_update_form = forms.AbsensiUpdateForm()
 
     context = {
-        'nama': 'arie',
-        'create': forms.InformasiAkunCreateForm(),
-        'update': forms.InformasiAkunUpdateForm(),
+        'context': {
+
+            'user_create_form': user_create_form,
+            'profil_admin_update_form': profil_admin_update_form,
+            'profil_guru_update_form': profil_guru_update_form,
+            'profil_siswa_update_form': profil_siswa_update_form,
+            'angkatan_create_form': angkatan_create_form,
+            'angkatan_update_form': angkatan_update_form,
+            'jadwal_update_form': jadwal_update_form,
+            'absensi_create_form': absensi_create_form,
+            'absensi_update_form': absensi_update_form,
+
+        }
     }
 
     return render(request, 'dashboard.html', context)
