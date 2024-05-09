@@ -131,7 +131,7 @@ class ProfilAdminCreateForm(ProfilBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_action = reverse_lazy('create_profil_admin')
 
 
 class ProfilAdminUpdateForm(ProfilBaseForm):
@@ -143,7 +143,7 @@ class ProfilAdminUpdateForm(ProfilBaseForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
+                'update_profil_admin', kwargs={'pk': self.instance.pk})
 
 
 class ProfilSiswaCreateForm(ProfilBaseForm):
@@ -154,7 +154,7 @@ class ProfilSiswaCreateForm(ProfilBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_action = reverse_lazy('create_profil_siswa')
 
 
 class ProfilSiswaUpdateForm(ProfilBaseForm):
@@ -167,19 +167,10 @@ class ProfilSiswaUpdateForm(ProfilBaseForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
+                'update_profil_siswa', kwargs={'pk': self.instance.pk})
 
 
-class ProfilGuruUpdateForm(ProfilBaseForm):
-    class Meta:
-        model = ProfilGuru
-        fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
 
 
 class ProfilGuruCreateForm(ProfilBaseForm):
@@ -189,7 +180,18 @@ class ProfilGuruCreateForm(ProfilBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_action = reverse_lazy('create_profil_guru')
+        
+class ProfilGuruUpdateForm(ProfilBaseForm):
+    class Meta:
+        model = ProfilGuru
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.helper.form_action = reverse_lazy(
+                'update_profil_guru', kwargs={'pk': self.instance.pk})
 
 
 class AngkatanBaseForm(ModelForm):
@@ -210,7 +212,7 @@ class AngkatanCreateForm(AngkatanBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_action = reverse_lazy('create_angkatan')
 
         existing_years = Angkatan.objects.values_list(
             'tahun_ajaran', flat=True)
@@ -232,7 +234,7 @@ class AngkatanUpdateForm(AngkatanBaseForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
+                'update_angkatan', kwargs={'pk': self.instance.pk})
 
         existing_years = Angkatan.objects.values_list(
             'tahun_ajaran', flat=True)
@@ -266,7 +268,7 @@ class JadwalUpdateForm(JadwalBaseForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
+                'update_jadwal', kwargs={'pk': self.instance.pk})
 
 
 class AbsensiBaseForm(ModelForm):
@@ -286,7 +288,7 @@ class AbsensiCreateForm(AbsensiBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_action = reverse_lazy('create_absensi')
 
 
 class AbsensiUpdateForm(AbsensiBaseForm):
@@ -300,4 +302,4 @@ class AbsensiUpdateForm(AbsensiBaseForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
+                'update_absensi', kwargs={'pk': self.instance.pk})

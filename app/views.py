@@ -78,59 +78,6 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-# @login_required
-# def informasi_akun(request):
-
-#     form = forms.InformasiAkunCreateForm()
-
-#     if request.method == 'POST':
-#         form = forms.InformasiAkunCreateForm(request.POST)
-
-#         if form.is_valid():
-#             form.save()
-#             return redirect('informasi_akun')
-
-#     context = {
-#         'informasi_akuns': models.InformasiAkun.objects.all(),
-#         'create': form,
-
-#     }
-
-#     return render(request, 'informasi_akun.html', context)
-
-
-# @login_required
-# def informasi_akun_update(request, pk):
-#     informasi_akun = get_object_or_404(models.InformasiAkun, pk=pk)
-#     form = forms.InformasiAkunUpdateForm(instance=informasi_akun)
-
-#     if request.method == 'POST':
-#         form = forms.InformasiAkunUpdateForm(
-#             request.POST, instance=informasi_akun)
-
-#         if form.is_valid():
-#             form.save()
-#             return redirect('informasi_akun')
-
-#     context = {
-#         'update': form,
-
-#     }
-
-#     return render(request, 'informasi_akun_update.html', context)
-
-
-# @login_required
-# def informasi_akun_delete(request, pk):
-#     informasi_akun = get_object_or_404(models.InformasiAkun, pk=pk)
-
-#     if request.method == 'POST':
-#         informasi_akun.delete()
-#         return redirect('informasi_akun')
-
-#     return redirect('informasi_akun')
-
-
 def index(request, jadwal):
     # Get the Jadwal object based on the jadwal parameter
     jadwal_object = get_object_or_404(Jadwal, nama__iexact=jadwal)
@@ -214,9 +161,9 @@ def render_pdf_view(request):
 
 
 # User Views
-@login_required
 def index_user(request):
-    users = User.objects.all()
+    # Get all users excluding the currently logged-in user
+    users = User.objects.exclude(pk=request.user.pk)
     return render(request, 'index_user.html', {'users': users})
 
 
@@ -244,7 +191,7 @@ def update_user(request, pk):
             return redirect('index_user')
     else:
         form = UserUpdateForm(instance=user)
-    return render(request, 'update_user.html', {'form': form, 'user': user})
+    return render(request, 'update_user.html', {'form': form})
 
 
 @login_required
@@ -270,7 +217,7 @@ def create_profil_admin(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profil Admin created successfully.')
-            return redirect('dashboard')
+            return redirect('index_profil_admin')
     else:
         form = ProfilAdminCreateForm()
     return render(request, 'create_profil_admin.html', {'form': form})
@@ -284,10 +231,10 @@ def update_profil_admin(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profil Admin updated successfully.')
-            return redirect('dashboard')
+            return redirect('index_profil_admin')
     else:
         form = ProfilAdminUpdateForm(instance=profil_admin)
-    return render(request, 'update_profil_admin.html', {'form': form, 'profil_admin': profil_admin})
+    return render(request, 'update_profil_admin.html', {'form': form})
 
 
 @login_required
@@ -295,7 +242,7 @@ def delete_profil_admin(request, pk):
     profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
     profil_admin.delete()
     messages.success(request, 'Profil Admin deleted successfully.')
-    return redirect('dashboard')
+    return redirect('index_profil_admin')
 
 # Profil Guru Views
 
@@ -313,7 +260,7 @@ def create_profil_guru(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profil Guru created successfully.')
-            return redirect('dashboard')
+            return redirect('index_profil_guru')
     else:
         form = ProfilGuruCreateForm()
     return render(request, 'create_profil_guru.html', {'form': form})
@@ -327,10 +274,10 @@ def update_profil_guru(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profil Guru updated successfully.')
-            return redirect('dashboard')
+            return redirect('index_profil_guru')
     else:
         form = ProfilGuruUpdateForm(instance=profil_guru)
-    return render(request, 'update_profil_guru.html', {'form': form, 'profil_guru': profil_guru})
+    return render(request, 'update_profil_guru.html', {'form': form})
 
 
 @login_required
@@ -338,7 +285,7 @@ def delete_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     profil_guru.delete()
     messages.success(request, 'Profil Guru deleted successfully.')
-    return redirect('dashboard')
+    return redirect('index_profil_guru')
 
 # Profil Siswa Views
 
@@ -356,7 +303,7 @@ def create_profil_siswa(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profil Siswa created successfully.')
-            return redirect('dashboard')
+            return redirect('index_profil_siswa')
     else:
         form = ProfilSiswaCreateForm()
     return render(request, 'create_profil_siswa.html', {'form': form})
@@ -370,10 +317,10 @@ def update_profil_siswa(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profil Siswa updated successfully.')
-            return redirect('dashboard')
+            return redirect('index_profil_siswa')
     else:
         form = ProfilSiswaUpdateForm(instance=profil_siswa)
-    return render(request, 'update_profil_siswa.html', {'form': form, 'profil_siswa': profil_siswa})
+    return render(request, 'update_profil_siswa.html', {'form': form})
 
 
 @login_required
@@ -381,7 +328,7 @@ def delete_profil_siswa(request, pk):
     profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
     profil_siswa.delete()
     messages.success(request, 'Profil Siswa deleted successfully.')
-    return redirect('dashboard')
+    return redirect('index_profil_siswa')
 
 # Angkatan Views
 
@@ -399,7 +346,7 @@ def create_angkatan(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Angkatan created successfully.')
-            return redirect('dashboard')
+            return redirect('index_angkatan')
     else:
         form = AngkatanCreateForm()
     return render(request, 'create_angkatan.html', {'form': form})
@@ -413,10 +360,10 @@ def update_angkatan(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Angkatan updated successfully.')
-            return redirect('dashboard')
+            return redirect('index_angkatan')
     else:
         form = AngkatanUpdateForm(instance=angkatan)
-    return render(request, 'update_angkatan.html', {'form': form, 'angkatan': angkatan})
+    return render(request, 'update_angkatan.html', {'form': form})
 
 
 @login_required
@@ -424,7 +371,7 @@ def delete_angkatan(request, pk):
     angkatan = get_object_or_404(Angkatan, pk=pk)
     angkatan.delete()
     messages.success(request, 'Angkatan deleted successfully.')
-    return redirect('dashboard')
+    return redirect('index_angkatan')
 
 # Jadwal Views
 
@@ -443,7 +390,7 @@ def update_jadwal(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Jadwal updated successfully.')
-            return redirect('dashboard')
+            return redirect('index_jadwal')
     else:
         form = JadwalUpdateForm(instance=jadwal)
     return render(request, 'update_jadwal.html', {'form': form, 'jadwal': jadwal})
@@ -464,7 +411,7 @@ def create_absensi(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Absensi created successfully.')
-            return redirect('dashboard')
+            return redirect('index_absensi')
     else:
         form = AbsensiCreateForm()
     return render(request, 'create_absensi.html', {'form': form})
@@ -478,10 +425,10 @@ def update_absensi(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Absensi updated successfully.')
-            return redirect('dashboard')
+            return redirect('index_absensi')
     else:
         form = AbsensiUpdateForm(instance=absensi)
-    return render(request, 'update_absensi.html', {'form': form, 'absensi': absensi})
+    return render(request, 'update_absensi.html', {'form': form})
 
 
 @login_required
@@ -489,4 +436,4 @@ def delete_absensi(request, pk):
     absensi = get_object_or_404(Absensi, pk=pk)
     absensi.delete()
     messages.success(request, 'Absensi deleted successfully.')
-    return redirect('dashboard')
+    return redirect('index_absensi')
