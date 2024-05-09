@@ -58,11 +58,11 @@ class Angkatan(models.Model):
     jumlah = models.IntegerField(default=0)
     kuota = models.IntegerField(default=100)
 
-    def calculate_jumlah(self):
-        return self.profilsiswa_set.count()  # Count the related ProfilSiswa objects
+    # def calculate_jumlah(self):
+    #     return self.profilsiswa_set.count()  # Count the related ProfilSiswa objects
 
     def save(self, *args, **kwargs):
-        self.jumlah = self.calculate_jumlah()
+        # self.jumlah = self.calculate_jumlah()
         super().save(*args, **kwargs)
 
     def __str__(self):

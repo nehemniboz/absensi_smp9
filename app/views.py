@@ -82,7 +82,7 @@ def index(request, jadwal):
     # Get the Jadwal object based on the jadwal parameter
     jadwal_object = get_object_or_404(Jadwal, nama__iexact=jadwal)
 
-    akun_instance = ProfilSiswa.objects.first()
+    akun_instance = ProfilSiswa.objects.get(pk=6)
     qr_code_hash = akun_instance.hash
 
     context = {
