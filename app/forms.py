@@ -67,23 +67,21 @@ class UserCreateForm(UserBaseForm):
 
 
 class UserUpdateForm(UserBaseForm):
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(
-        label='Password confirmation', widget=forms.PasswordInput)
+
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'password1', 'password2', 'groups']
+        fields = ['username', 'groups']
 
-    def clean_password2(self):
-        # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Passwords don't match")
-        return password2
+    # def clean_password2(self):
+    #     # Check that the two password entries match
+    #     password1 = self.cleaned_data.get("password1")
+    #     password2 = self.cleaned_data.get("password2")
+    #     if password1 and password2 and password1 != password2:
+    #         raise forms.ValidationError("Passwords don't match")
+    #     return password2
 
     def clean_groups(self):
         # Ensure groups can't be updated
@@ -103,7 +101,7 @@ class UserUpdateForm(UserBaseForm):
 
         # Call the super save method to save the user object
         user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
+        # user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
             self.save_m2m()  # Save the many-to-many relationships (groups)
@@ -170,9 +168,6 @@ class ProfilSiswaUpdateForm(ProfilBaseForm):
                 'update_profil_siswa', kwargs={'pk': self.instance.pk})
 
 
-
-
-
 class ProfilGuruCreateForm(ProfilBaseForm):
     class Meta:
         model = ProfilGuru
@@ -181,7 +176,8 @@ class ProfilGuruCreateForm(ProfilBaseForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper.form_action = reverse_lazy('create_profil_guru')
-        
+
+
 class ProfilGuruUpdateForm(ProfilBaseForm):
     class Meta:
         model = ProfilGuru
@@ -241,7 +237,7 @@ class AngkatanUpdateForm(AngkatanBaseForm):
         year_choices = [("", "Pilih Tahun Ajaran")]
         year_choices += [(year, year) for year in range(
             # Check if the update need the year of exist
-            1984, current_year() + 1) if year not in existing_years]
+            1984, current_year() + 1)]
         self.fields['tahun_ajaran'].choices = year_choices
 
 

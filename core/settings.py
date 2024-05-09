@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'django_extensions',
     'qr_code',
-    'annoying',
+
 ]
 
 MIDDLEWARE = [

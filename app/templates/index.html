@@ -9,7 +9,7 @@
 
       {% csrf_token %}
       <div>
-        <img src="{% qr_url_from_text qr_code image_format='png' error_correction='m' size=5 version=10 %}" alt="QR Code" />
+        <img src="{% qr_url_from_text qr_code image_format='png' error_correction='h' size=5 version=12 %}" alt="QR Code" />
       </div>
     {% else %}
       <!-- Display a message and provide a link to return back -->
