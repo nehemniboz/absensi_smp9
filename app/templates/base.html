@@ -16,10 +16,6 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/components.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}" />
-    {% comment %} <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" /> {% endcomment %}
-
-    {% comment %} <script src="https://unpkg.com/htmx.org@1.9.11"></script>
-    <script src="//unpkg.com/alpinejs" defer></script> {% endcomment %}
   </head>
 
   <body>
@@ -48,7 +44,7 @@
               </a>
               <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-title">Logged in {{ request.user.last_login }}</div>
-                {% comment %} <a href="{% url 'user_profile_update' %}" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a> {% endcomment %}
+                <a href="" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a>
                 <div class="dropdown-divider"></div>
                 <form action="{% url 'logout' %}" method="POST">
                   {% csrf_token %}
@@ -80,7 +76,6 @@
           <div class="footer-left">
             Copyright &copy; 2024<div class="bullet"></div>By <a href="https://github.com/Anjasfedo/" target="_blank">Anjasfedo</a>
           </div>
-          {% comment %} <div class="footer-right">{{ version }}</div> {% endcomment %}
         </footer>
       </div>
     </div>
@@ -98,11 +93,6 @@
     <script src="{% static 'assets/js/custom.js' %}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Page Specific JS File -->
-    {% comment %} <script src="{% static 'assets/js/page/bootstrap.modal.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.js' %}"></script>
-    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script> {% endcomment %}
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--   

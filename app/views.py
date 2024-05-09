@@ -35,8 +35,7 @@ def link_callback(uri, rel, request):
     return f"{HOSTNAME}{uri}"
 
 
-# @login_required
-
+@login_required
 def dashboard(request):
     # if request.method == 'POST':
     #     form = forms.CustomUserCreationForm(request.POST)
@@ -81,7 +80,7 @@ def dashboard(request):
         }
     }
 
-    return render(request, 'informasi_akun_create.html', context)
+    return render(request, 'dashboard.html', context)
 
 
 @login_required

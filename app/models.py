@@ -19,6 +19,7 @@ def unique_user_validator(value):
         raise ValidationError(
             'This user is already associated with another profile.')
 
+
 def get_current_time():
     return datetime.datetime.now().time()
 

@@ -13,6 +13,7 @@ thread_data = threading.local()
 def current_year():
     return datetime.now().year
 
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
