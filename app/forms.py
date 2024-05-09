@@ -131,7 +131,7 @@ class ProfilAdminCreateForm(ProfilBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('profil_admin')
+        self.helper.form_action = reverse_lazy('dashboard')
 
 
 class ProfilAdminUpdateForm(ProfilBaseForm):
@@ -154,7 +154,7 @@ class ProfilSiswaCreateForm(ProfilBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('profil_siswa')
+        self.helper.form_action = reverse_lazy('dashboard')
 
 
 class ProfilSiswaUpdateForm(ProfilBaseForm):
@@ -189,7 +189,7 @@ class ProfilGuruCreateForm(ProfilBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('profil_guru')
+        self.helper.form_action = reverse_lazy('dashboard')
 
 
 class AngkatanBaseForm(ModelForm):

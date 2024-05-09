@@ -45,10 +45,14 @@ def dashboard(request):
     #         return redirect('dashboard')  # Redirect to a success page or URL
     # else:
     # form = forms.CustomUserCreationForm()
+    
     user_create_form = forms.UserCreateForm()
     user_update_form = forms.UserUpdateForm()
+    profil_admin_create_form = forms.ProfilAdminCreateForm()
     profil_admin_update_form = forms.ProfilAdminUpdateForm()
+    profil_guru_create_form = forms.ProfilGuruCreateForm()
     profil_guru_update_form = forms.ProfilGuruUpdateForm()
+    profil_siswa_create_form = forms.ProfilSiswaCreateForm()
     profil_siswa_update_form = forms.ProfilSiswaUpdateForm()
     angkatan_create_form = forms.AngkatanCreateForm()
     angkatan_update_form = forms.AngkatanUpdateForm()
@@ -61,8 +65,11 @@ def dashboard(request):
 
             'user_create_form': user_create_form,
             'user_update_form': user_update_form,
+            'profil_admin_create_form': profil_admin_create_form,
             'profil_admin_update_form': profil_admin_update_form,
+            'profil_guru_create_form': profil_guru_create_form,
             'profil_guru_update_form': profil_guru_update_form,
+            'profil_siswa_create_form': profil_siswa_create_form,
             'profil_siswa_update_form': profil_siswa_update_form,
             'angkatan_create_form': angkatan_create_form,
             'angkatan_update_form': angkatan_update_form,
