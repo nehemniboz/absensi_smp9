@@ -1,0 +1,1 @@
+[{"model": "app.jadwal", "pk": 5, "fields": {"nama": "masuk", "waktu": "06:00:00"}}, {"model": "app.jadwal", "pk": 6, "fields": {"nama": "pulang", "waktu": "18:00:00"}}]
