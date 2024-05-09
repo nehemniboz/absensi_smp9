@@ -160,7 +160,10 @@ def render_pdf_view(request):
         return HttpResponse('No ProfilSiswa instance found')
 
 
+from .decorators import check_group
 # User Views
+@login_required
+@check_group(['ADMIN'])
 def index_user(request):
     # Get all users excluding the currently logged-in user
     users = User.objects.exclude(pk=request.user.pk)
@@ -168,6 +171,7 @@ def index_user(request):
 
 
 @login_required
+@check_group(['ADMIN'])
 def create_user(request):
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
@@ -181,6 +185,7 @@ def create_user(request):
 
 
 @login_required
+@check_group(['ADMIN'])
 def update_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -195,6 +200,7 @@ def update_user(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     user.delete()
@@ -205,12 +211,14 @@ def delete_user(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def index_profil_admin(request):
     profil_admins = ProfilAdmin.objects.all()
     return render(request, 'index_profil_admin.html', {'profil_admins': profil_admins})
 
 
 @login_required
+@check_group(['ADMIN'])
 def create_profil_admin(request):
     if request.method == 'POST':
         form = ProfilAdminCreateForm(request.POST)
@@ -224,6 +232,7 @@ def create_profil_admin(request):
 
 
 @login_required
+@check_group(['ADMIN'])
 def update_profil_admin(request, pk):
     profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
     if request.method == 'POST':
@@ -238,6 +247,7 @@ def update_profil_admin(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def delete_profil_admin(request, pk):
     profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
     profil_admin.delete()
@@ -248,12 +258,14 @@ def delete_profil_admin(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def index_profil_guru(request):
     profil_gurus = ProfilGuru.objects.all()
     return render(request, 'index_profil_guru.html', {'profil_gurus': profil_gurus})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_profil_guru(request):
     if request.method == 'POST':
         form = ProfilGuruCreateForm(request.POST)
@@ -267,6 +279,7 @@ def create_profil_guru(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     if request.method == 'POST':
@@ -281,6 +294,7 @@ def update_profil_guru(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     profil_guru.delete()
@@ -291,12 +305,14 @@ def delete_profil_guru(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def index_profil_siswa(request):
     profil_siswas = ProfilSiswa.objects.all()
     return render(request, 'index_profil_siswa.html', {'profil_siswas': profil_siswas})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_profil_siswa(request):
     if request.method == 'POST':
         form = ProfilSiswaCreateForm(request.POST)
@@ -310,6 +326,7 @@ def create_profil_siswa(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_profil_siswa(request, pk):
     profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
     if request.method == 'POST':
@@ -324,6 +341,7 @@ def update_profil_siswa(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_profil_siswa(request, pk):
     profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
     profil_siswa.delete()
@@ -334,12 +352,14 @@ def delete_profil_siswa(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_angkatan(request):
     angkatans = Angkatan.objects.all()
     return render(request, 'index_angkatan.html', {'angkatans': angkatans})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_angkatan(request):
     if request.method == 'POST':
         form = AngkatanCreateForm(request.POST)
@@ -353,6 +373,7 @@ def create_angkatan(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_angkatan(request, pk):
     angkatan = get_object_or_404(Angkatan, pk=pk)
     if request.method == 'POST':
@@ -367,6 +388,7 @@ def update_angkatan(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_angkatan(request, pk):
     angkatan = get_object_or_404(Angkatan, pk=pk)
     angkatan.delete()
@@ -377,12 +399,14 @@ def delete_angkatan(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def index_jadwal(request):
     jadwals = Jadwal.objects.all()
     return render(request, 'index_jadwal.html', {'jadwals': jadwals})
 
 
 @login_required
+@check_group(['ADMIN'])
 def update_jadwal(request, pk):
     jadwal = get_object_or_404(Jadwal, pk=pk)
     if request.method == 'POST':
@@ -399,12 +423,14 @@ def update_jadwal(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_absensi(request):
     absensis = Absensi.objects.all()
     return render(request, 'index_absensi.html', {'absensis': absensis})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_absensi(request):
     if request.method == 'POST':
         form = AbsensiCreateForm(request.POST)
@@ -418,6 +444,7 @@ def create_absensi(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_absensi(request, pk):
     absensi = get_object_or_404(Absensi, pk=pk)
     if request.method == 'POST':
@@ -432,6 +459,7 @@ def update_absensi(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_absensi(request, pk):
     absensi = get_object_or_404(Absensi, pk=pk)
     absensi.delete()
