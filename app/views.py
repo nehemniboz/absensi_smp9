@@ -61,6 +61,7 @@ def dashboard(request):
     absensi_update_form = forms.AbsensiUpdateForm()
 
     context = {
+        'form': absensi_create_form,
         'context': {
 
             'user_create_form': user_create_form,
@@ -80,7 +81,7 @@ def dashboard(request):
         }
     }
 
-    return render(request, 'dashboard.html', context)
+    return render(request, 'informasi_akun_create.html', context)
 
 
 @login_required
