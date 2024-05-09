@@ -1,10 +1,13 @@
-from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalCreateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm
+from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm, UserProfileForm
 from .models import User, ProfilAdmin, ProfilGuru, ProfilSiswa, Angkatan, Jadwal, Absensi
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import get_template
 from django.db import IntegrityError
 from django.http import HttpRequest
+from django.contrib.auth import logout
+
+from .decorators import check_group
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -32,47 +35,12 @@ def link_callback(uri, rel, request):
 
 @login_required
 def dashboard(request):
-    # if request.method == 'POST':
-    #     form = forms.CustomUserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('dashboard')  # Redirect to a success page or URL
-    # else:
-    # form = forms.CustomUserCreationForm()
-
-    user_create_form = UserCreateForm()
-    user_update_form = UserUpdateForm()
-    profil_admin_create_form = ProfilAdminCreateForm()
-    profil_admin_update_form = ProfilAdminUpdateForm()
-    profil_guru_create_form = ProfilGuruCreateForm()
-    profil_guru_update_form = ProfilGuruUpdateForm()
-    profil_siswa_create_form = ProfilSiswaCreateForm()
-    profil_siswa_update_form = ProfilSiswaUpdateForm()
-    angkatan_create_form = AngkatanCreateForm()
-    angkatan_update_form = AngkatanUpdateForm()
-    jadwal_update_form = JadwalUpdateForm()
-    absensi_create_form = AbsensiCreateForm()
-    absensi_update_form = AbsensiUpdateForm()
-
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        qr_code = siswa_instance.hash
+    
     context = {
-        'form': absensi_create_form,
-        'context': {
-
-            'user_create_form': user_create_form,
-            'user_update_form': user_update_form,
-            'profil_admin_create_form': profil_admin_create_form,
-            'profil_admin_update_form': profil_admin_update_form,
-            'profil_guru_create_form': profil_guru_create_form,
-            'profil_guru_update_form': profil_guru_update_form,
-            'profil_siswa_create_form': profil_siswa_create_form,
-            'profil_siswa_update_form': profil_siswa_update_form,
-            'angkatan_create_form': angkatan_create_form,
-            'angkatan_update_form': angkatan_update_form,
-            'jadwal_update_form': jadwal_update_form,
-            'absensi_create_form': absensi_create_form,
-            'absensi_update_form': absensi_update_form,
-
-        }
+        'qr_code': qr_code,
     }
 
     return render(request, 'dashboard.html', context)
@@ -120,20 +88,26 @@ def qr_code_check(request):
 
 
 # Render PDF
-
+@login_required
+@check_group(['SISWA'])
 def render_pdf_view(request):
-    template_path = 'qr_pdf.html'
+    if request.method == 'POST':
+        user_id = request.POST.get('id')
 
-    # Or retrieve it based on some condition
-    akun_instance = ProfilSiswa.objects.first()
+        # Retrieve the user object using the user ID
+        try:
+            user = User.objects.get(id=user_id)
+            siswa_instance = ProfilSiswa.objects.get(user=user)
+        except (User.DoesNotExist, ProfilSiswa.DoesNotExist):
+            return HttpResponse('Invalid user ID')
 
-    # Ensure akun_instance exists before proceeding
-    if akun_instance:
+        template_path = 'qr_pdf.html'
+
         # Get the name and NISN from the ProfilSiswa instance
-        nama = akun_instance.nama
-        nisn = akun_instance.nisn
+        nama = siswa_instance.nama
+        nisn = siswa_instance.nisn
         # Generate the hash
-        qr_code_hash = akun_instance.hash
+        qr_code_hash = siswa_instance.hash
 
         context = {
             'qr_code': qr_code_hash,
@@ -155,12 +129,30 @@ def render_pdf_view(request):
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html + '</pre>')
         return response
+
     else:
-        # Handle case where no ProfilSiswa instance is found
-        return HttpResponse('No ProfilSiswa instance found')
+        return HttpResponse('Method not allowed')
 
 
-from .decorators import check_group
+@login_required
+def user_profile_update(request):
+    user = request.user
+    form = UserProfileForm(instance=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            logout(request)
+            return redirect('user_profile_update')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'user_profile_update.html', context)
+
+
 # User Views
 @login_required
 @check_group(['ADMIN'])

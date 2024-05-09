@@ -7,7 +7,7 @@ class RedirectAuthenticatedUserMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated:
-            if not request.path.startswith('/accounts/logout/'):
+            if not request.path.startswith('/accounts/logout/') and not request.path.startswith('/accounts/password-change/'):
                 if request.path.startswith('/accounts/'):
                     return redirect('dashboard')
 

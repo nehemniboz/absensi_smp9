@@ -12,6 +12,9 @@ urlpatterns = [
     path('absen/<str:jadwal>/', views.index, name="index"),
     path('qr_pdf/', views.render_pdf_view, name="qr_pdf"),
     path('qr_codes/', views.qr_code_check, name='qr_code_check'),
+    
+    path('user-profile-update', views.user_profile_update,
+         name='user_profile_update'),
 
 
     path('index_user/', views.index_user, name='index_user'),

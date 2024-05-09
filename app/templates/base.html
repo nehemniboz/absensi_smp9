@@ -44,7 +44,7 @@
               </a>
               <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-title">Logged in {{ request.user.last_login }}</div>
-                <a href="" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a>
+                <a href="{% url 'user_profile_update' %}" class="dropdown-item has-icon"><i class="far fa-user"></i> Profile</a>
                 <div class="dropdown-divider"></div>
                 <form action="{% url 'logout' %}" method="POST">
                   {% csrf_token %}
@@ -114,10 +114,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!--      
+    <!--       
     JSPM Generator Import Map
     Edit URL: https://generator.jspm.io/#U2NjYGBkDM0rySzJSU1hcKiqyMxL18/JTCpKLKp0MNAzMtQzAABgbxE9JAA
-        -->
+         -->
     <script type="importmap">
   {
     "imports": {
@@ -177,6 +177,7 @@
     <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/index.js" />
     <link rel="modulepreload" href="https://ga.jspm.io/npm:ts-custom-error@3.3.1/dist/custom-error.mjs" />
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {% block page_js %}
 
     {% endblock %}
