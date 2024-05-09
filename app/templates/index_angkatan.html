@@ -26,21 +26,21 @@
                 <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Angkatan</th>
-                      <th>Jumlah</th>
-                      <th>Kuota</th>
-                      <th>Aksi</th>
+                      <th class="p-0 text-center">#</th>
+                      <th class="p-0 text-center">Angkatan</th>
+                      <th class="p-0 text-center">Jumlah</th>
+                      <th class="p-0 text-center">Kuota</th>
+                      <th class="p-0 text-center">Aksi</th>
                       <!-- Add other fields as needed -->
                     </tr>
                   </thead>
                   <tbody>
                     {% for angkatan in angkatans %}
                       <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ angkatan.tahun_ajaran }}</td>
-                        <td>{{ angkatan.jumlah }}</td>
-                        <td>{{ angkatan.kuota }}</td>
+                        <td class="p-0 text-center">{{ forloop.counter }}</td>
+                        <td class="p-0 text-center">{{ angkatan.tahun_ajaran }}</td>
+                        <td class="p-0 text-center">{{ angkatan.jumlah }}</td>
+                        <td class="p-0 text-center">{{ angkatan.kuota }}</td>
                         <!-- Display other fields as needed -->
                         <td class="p-0 text-center">
                           <div class="d-flex justify-content-center">

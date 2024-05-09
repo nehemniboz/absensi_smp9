@@ -25,24 +25,24 @@
                 <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Student Profile</th>
-                      <th>Schedule</th>
-                      <th>Date</th>
-                      <th>Time</th>
-                      <th>Status</th>
-                      <th>Actions</th> <!-- New column for Actions -->
+                      <th class="p-0 text-center">#</th>
+                      <th class="p-0 text-center">Student Profile</th>
+                      <th class="p-0 text-center">Schedule</th>
+                      <th class="p-0 text-center">Date</th>
+                      <th class="p-0 text-center">Time</th>
+                      <th class="p-0 text-center">Status</th>
+                      <th class="p-0 text-center">Actions</th> <!-- New column for Actions -->
                     </tr>
                   </thead>
                   <tbody>
                     {% for absensi in absensis %}
                       <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ absensi.profil_siswa }}</td>
-                        <td>{{ absensi.jadwal }}</td>
-                        <td>{{ absensi.tanggal }}</td>
-                        <td>{{ absensi.waktu }}</td>
-                        <td>{{ absensi.status }}</td>
+                        <td class="p-0 text-center">{{ forloop.counter }}</td>
+                        <td class="p-0 text-center">{{ absensi.profil_siswa }}</td>
+                        <td class="p-0 text-center">{{ absensi.jadwal }}</td>
+                        <td class="p-0 text-center">{{ absensi.tanggal }}</td>
+                        <td class="p-0 text-center">{{ absensi.waktu }}</td>
+                        <td class="p-0 text-center">{{ absensi.status }}</td>
                         <td class="p-0 text-center">
                           <div class="d-flex justify-content-center">
                             <a href="{% url 'update_absensi' absensi.pk %}" class="btn btn-info mx-1">Update</a>

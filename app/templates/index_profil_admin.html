@@ -26,21 +26,21 @@
                 <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Nama</th>
-                      <th>Alamat</th>
-                      <th>Email</th>
-                      <th>Aksi</th>
+                      <th class="p-0 text-center">#</th>
+                      <th class="p-0 text-center">Nama</th>
+                      <th class="p-0 text-center">Alamat</th>
+                      <th class="p-0 text-center">Email</th>
+                      <th class="p-0 text-center">Aksi</th>
                       <!-- Add other fields as needed -->
                     </tr>
                   </thead>
                   <tbody>
                     {% for profil_admin in profil_admins %}
                       <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ profil_admin.nama }}</td>
-                        <td>{{ profil_admin.alamat }}</td>
-                        <td>{{ profil_admin.email }}</td>
+                        <td class="p-0 text-center">{{ forloop.counter }}</td>
+                        <td class="p-0 text-center">{{ profil_admin.nama }}</td>
+                        <td class="p-0 text-center">{{ profil_admin.alamat }}</td>
+                        <td class="p-0 text-center">{{ profil_admin.email }}</td>
                         <!-- Display other fields as needed -->
                         <td class="p-0 text-center">
                           <div class="d-flex justify-content-center">

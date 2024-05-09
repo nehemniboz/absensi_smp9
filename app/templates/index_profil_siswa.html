@@ -26,25 +26,25 @@
                 <table class="table table-striped table-bordered">
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Nama</th>
-                      <th>Alamat</th>
-                      <th>Email</th>
-                      <th>Angkatan</th>
-                      <th>NISN</th>
-                      <th>Aksi</th>
+                      <th class="p-0 text-center">#</th>
+                      <th class="p-0 text-center">Nama</th>
+                      <th class="p-0 text-center">Alamat</th>
+                      <th class="p-0 text-center">Email</th>
+                      <th class="p-0 text-center">Angkatan</th>
+                      <th class="p-0 text-center">NISN</th>
+                      <th class="p-0 text-center">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     {% for profil_siswa in profil_siswas %}
                       <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ profil_siswa.nama }}</td>
-                        <td>{{ profil_siswa.alamat }}</td>
-                        <td>{{ profil_siswa.email }}</td>
-                        <td>{{ profil_siswa.angkatan }}</td>
-                        <td>{{ profil_siswa.nisn }}</td>
-                        <td>
+                        <td class="p-0 text-center">{{ forloop.counter }}</td>
+                        <td class="p-0 text-center">{{ profil_siswa.nama }}</td>
+                        <td class="p-0 text-center">{{ profil_siswa.alamat }}</td>
+                        <td class="p-0 text-center">{{ profil_siswa.email }}</td>
+                        <td class="p-0 text-center">{{ profil_siswa.angkatan }}</td>
+                        <td class="p-0 text-center">{{ profil_siswa.nisn }}</td>
+                        <td class="p-0 text-center">
                           <a href="{% url 'update_profil_siswa' profil_siswa.pk %}" class="btn btn-info mx-1">Update</a>
                           <button class="btn btn-danger mx-1 delete-profil-siswa" data-url="{% url 'delete_profil_siswa' profil_siswa.pk %}">Delete</button>
                         </td>

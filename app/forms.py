@@ -67,21 +67,12 @@ class UserCreateForm(UserBaseForm):
 
 
 class UserUpdateForm(UserBaseForm):
-
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
 
     class Meta:
         model = User
         fields = ['username', 'groups']
-
-    # def clean_password2(self):
-    #     # Check that the two password entries match
-    #     password1 = self.cleaned_data.get("password1")
-    #     password2 = self.cleaned_data.get("password2")
-    #     if password1 and password2 and password1 != password2:
-    #         raise forms.ValidationError("Passwords don't match")
-    #     return password2
 
     def clean_groups(self):
         # Ensure groups can't be updated
@@ -91,7 +82,7 @@ class UserUpdateForm(UserBaseForm):
             original_instance = User.objects.get(pk=instance.pk)
             original_groups = original_instance.groups.all()
             new_groups = self.cleaned_data.get('groups')
-            if original_groups != new_groups:
+            if original_groups.first() != new_groups.first():
                 raise forms.ValidationError("Cannot update user groups.")
         return self.cleaned_data['groups']
 
@@ -101,7 +92,6 @@ class UserUpdateForm(UserBaseForm):
 
         # Call the super save method to save the user object
         user = super().save(commit=False)
-        # user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
             self.save_m2m()  # Save the many-to-many relationships (groups)
@@ -112,6 +102,9 @@ class UserUpdateForm(UserBaseForm):
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
                 'update_user', kwargs={'pk': self.instance.pk})
+
+        self.fields.pop('password1', None)
+        self.fields.pop('password2', None)
 
 
 class ProfilBaseForm(ModelForm):
