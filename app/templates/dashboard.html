@@ -12,22 +12,33 @@
       </div>
     </div>
     <div class="section-body">
-  
-      {% if request.user|has_group:"admin" %}
-    <p>Selamat datang Admin!</p>
-{% elif request.user|has_group:"guru" %}
-    <p>Selamat datang Guru!</p>
-{% elif request.user|has_group:"siswa" %}
-    <p>Selamat datang Siswa!</p>
-{% endif %}
+      {% if request.user|has_group:'admin' %}
+        <p>Selamat datang Admin!</p>
+      {% elif request.user|has_group:'guru' %}
+        <p>Selamat datang Guru!</p>
+      {% elif request.user|has_group:'siswa' %}
+        <p>Selamat datang Siswa!</p>
+      {% endif %}
+      {% comment %}
 
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit facilis, doloremque itaque debitis minima accusantium! Dolor doloremque magnam repellat sequi mollitia accusantium veritatis, laudantium assumenda, a aliquid velit, fuga nostrum?
+      {% endcomment %}
+      <div class="row">
+        {% for form_name, form in context.items %}
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h4>{{ form_name|title }}</h4>
+              </div>
+              <div class="card-body p-5">
+                {% crispy form %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% comment %} {% endcomment %}
     </div>
   </section>
 {% endblock %}
-
-{% block page_js %}
-  
-{% endblock %}
-
 

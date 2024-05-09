@@ -1,15 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-
-from . import forms
-from . import models
-
+from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalCreateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm
+from .models import User, ProfilAdmin, ProfilGuru, ProfilSiswa, Angkatan, Jadwal, Absensi
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import get_template
 from django.db import IntegrityError
-from django.shortcuts import get_object_or_404
 from django.http import HttpRequest
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from xhtml2pdf import pisa
 
@@ -33,67 +32,50 @@ def link_callback(uri, rel, request):
 
 @login_required
 def dashboard(request):
+    # if request.method == 'POST':
+    #     form = forms.CustomUserCreationForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('dashboard')  # Redirect to a success page or URL
+    # else:
+    # form = forms.CustomUserCreationForm()
+
+    user_create_form = UserCreateForm()
+    user_update_form = UserUpdateForm()
+    profil_admin_create_form = ProfilAdminCreateForm()
+    profil_admin_update_form = ProfilAdminUpdateForm()
+    profil_guru_create_form = ProfilGuruCreateForm()
+    profil_guru_update_form = ProfilGuruUpdateForm()
+    profil_siswa_create_form = ProfilSiswaCreateForm()
+    profil_siswa_update_form = ProfilSiswaUpdateForm()
+    angkatan_create_form = AngkatanCreateForm()
+    angkatan_update_form = AngkatanUpdateForm()
+    jadwal_update_form = JadwalUpdateForm()
+    absensi_create_form = AbsensiCreateForm()
+    absensi_update_form = AbsensiUpdateForm()
 
     context = {
-        'nama': 'arie',
-        'create': forms.InformasiAkunCreateForm(),
-        'update': forms.InformasiAkunUpdateForm(),
+        'form': absensi_create_form,
+        'context': {
+
+            'user_create_form': user_create_form,
+            'user_update_form': user_update_form,
+            'profil_admin_create_form': profil_admin_create_form,
+            'profil_admin_update_form': profil_admin_update_form,
+            'profil_guru_create_form': profil_guru_create_form,
+            'profil_guru_update_form': profil_guru_update_form,
+            'profil_siswa_create_form': profil_siswa_create_form,
+            'profil_siswa_update_form': profil_siswa_update_form,
+            'angkatan_create_form': angkatan_create_form,
+            'angkatan_update_form': angkatan_update_form,
+            'jadwal_update_form': jadwal_update_form,
+            'absensi_create_form': absensi_create_form,
+            'absensi_update_form': absensi_update_form,
+
+        }
     }
 
     return render(request, 'dashboard.html', context)
-
-
-@login_required
-def informasi_akun(request):
-
-    form = forms.InformasiAkunCreateForm()
-
-    if request.method == 'POST':
-        form = forms.InformasiAkunCreateForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect('informasi_akun')
-
-    context = {
-        'informasi_akuns': models.InformasiAkun.objects.all(),
-        'create': form,
-
-    }
-
-    return render(request, 'informasi_akun.html', context)
-
-
-@login_required
-def informasi_akun_update(request, pk):
-    informasi_akun = get_object_or_404(models.InformasiAkun, pk=pk)
-    form = forms.InformasiAkunUpdateForm(instance=informasi_akun)
-
-    if request.method == 'POST':
-        form = forms.InformasiAkunUpdateForm(
-            request.POST, instance=informasi_akun)
-
-        if form.is_valid():
-            form.save()
-            return redirect('informasi_akun')
-
-    context = {
-        'update': form,
-
-    }
-
-    return render(request, 'informasi_akun_update.html', context)
-
-
-@login_required
-def informasi_akun_delete(request, pk):
-    informasi_akun = get_object_or_404(models.InformasiAkun, pk=pk)
-
-    if request.method == 'POST':
-        informasi_akun.delete()
-        return redirect('informasi_akun')
-
-    return redirect('informasi_akun')
 
 
 def index(request, jadwal):
@@ -176,3 +158,282 @@ def render_pdf_view(request):
     else:
         # Handle case where no ProfilSiswa instance is found
         return HttpResponse('No ProfilSiswa instance found')
+
+
+# User Views
+def index_user(request):
+    # Get all users excluding the currently logged-in user
+    users = User.objects.exclude(pk=request.user.pk)
+    return render(request, 'index_user.html', {'users': users})
+
+
+@login_required
+def create_user(request):
+    if request.method == 'POST':
+        form = UserCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User created successfully.')
+            return redirect('index_user')
+    else:
+        form = UserCreateForm()
+    return render(request, 'create_user.html', {'form': form})
+
+
+@login_required
+def update_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully.')
+            return redirect('index_user')
+    else:
+        form = UserUpdateForm(instance=user)
+    return render(request, 'update_user.html', {'form': form})
+
+
+@login_required
+def delete_user(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user.delete()
+    messages.success(request, 'User deleted successfully.')
+    return redirect('index_user')
+
+# Profil Admin Views
+
+
+@login_required
+def index_profil_admin(request):
+    profil_admins = ProfilAdmin.objects.all()
+    return render(request, 'index_profil_admin.html', {'profil_admins': profil_admins})
+
+
+@login_required
+def create_profil_admin(request):
+    if request.method == 'POST':
+        form = ProfilAdminCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil Admin created successfully.')
+            return redirect('index_profil_admin')
+    else:
+        form = ProfilAdminCreateForm()
+    return render(request, 'create_profil_admin.html', {'form': form})
+
+
+@login_required
+def update_profil_admin(request, pk):
+    profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
+    if request.method == 'POST':
+        form = ProfilAdminUpdateForm(request.POST, instance=profil_admin)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil Admin updated successfully.')
+            return redirect('index_profil_admin')
+    else:
+        form = ProfilAdminUpdateForm(instance=profil_admin)
+    return render(request, 'update_profil_admin.html', {'form': form})
+
+
+@login_required
+def delete_profil_admin(request, pk):
+    profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
+    profil_admin.delete()
+    messages.success(request, 'Profil Admin deleted successfully.')
+    return redirect('index_profil_admin')
+
+# Profil Guru Views
+
+
+@login_required
+def index_profil_guru(request):
+    profil_gurus = ProfilGuru.objects.all()
+    return render(request, 'index_profil_guru.html', {'profil_gurus': profil_gurus})
+
+
+@login_required
+def create_profil_guru(request):
+    if request.method == 'POST':
+        form = ProfilGuruCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil Guru created successfully.')
+            return redirect('index_profil_guru')
+    else:
+        form = ProfilGuruCreateForm()
+    return render(request, 'create_profil_guru.html', {'form': form})
+
+
+@login_required
+def update_profil_guru(request, pk):
+    profil_guru = get_object_or_404(ProfilGuru, pk=pk)
+    if request.method == 'POST':
+        form = ProfilGuruUpdateForm(request.POST, instance=profil_guru)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil Guru updated successfully.')
+            return redirect('index_profil_guru')
+    else:
+        form = ProfilGuruUpdateForm(instance=profil_guru)
+    return render(request, 'update_profil_guru.html', {'form': form})
+
+
+@login_required
+def delete_profil_guru(request, pk):
+    profil_guru = get_object_or_404(ProfilGuru, pk=pk)
+    profil_guru.delete()
+    messages.success(request, 'Profil Guru deleted successfully.')
+    return redirect('index_profil_guru')
+
+# Profil Siswa Views
+
+
+@login_required
+def index_profil_siswa(request):
+    profil_siswas = ProfilSiswa.objects.all()
+    return render(request, 'index_profil_siswa.html', {'profil_siswas': profil_siswas})
+
+
+@login_required
+def create_profil_siswa(request):
+    if request.method == 'POST':
+        form = ProfilSiswaCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil Siswa created successfully.')
+            return redirect('index_profil_siswa')
+    else:
+        form = ProfilSiswaCreateForm()
+    return render(request, 'create_profil_siswa.html', {'form': form})
+
+
+@login_required
+def update_profil_siswa(request, pk):
+    profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
+    if request.method == 'POST':
+        form = ProfilSiswaUpdateForm(request.POST, instance=profil_siswa)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profil Siswa updated successfully.')
+            return redirect('index_profil_siswa')
+    else:
+        form = ProfilSiswaUpdateForm(instance=profil_siswa)
+    return render(request, 'update_profil_siswa.html', {'form': form})
+
+
+@login_required
+def delete_profil_siswa(request, pk):
+    profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
+    profil_siswa.delete()
+    messages.success(request, 'Profil Siswa deleted successfully.')
+    return redirect('index_profil_siswa')
+
+# Angkatan Views
+
+
+@login_required
+def index_angkatan(request):
+    angkatans = Angkatan.objects.all()
+    return render(request, 'index_angkatan.html', {'angkatans': angkatans})
+
+
+@login_required
+def create_angkatan(request):
+    if request.method == 'POST':
+        form = AngkatanCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Angkatan created successfully.')
+            return redirect('index_angkatan')
+    else:
+        form = AngkatanCreateForm()
+    return render(request, 'create_angkatan.html', {'form': form})
+
+
+@login_required
+def update_angkatan(request, pk):
+    angkatan = get_object_or_404(Angkatan, pk=pk)
+    if request.method == 'POST':
+        form = AngkatanUpdateForm(request.POST, instance=angkatan)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Angkatan updated successfully.')
+            return redirect('index_angkatan')
+    else:
+        form = AngkatanUpdateForm(instance=angkatan)
+    return render(request, 'update_angkatan.html', {'form': form})
+
+
+@login_required
+def delete_angkatan(request, pk):
+    angkatan = get_object_or_404(Angkatan, pk=pk)
+    angkatan.delete()
+    messages.success(request, 'Angkatan deleted successfully.')
+    return redirect('index_angkatan')
+
+# Jadwal Views
+
+
+@login_required
+def index_jadwal(request):
+    jadwals = Jadwal.objects.all()
+    return render(request, 'index_jadwal.html', {'jadwals': jadwals})
+
+
+@login_required
+def update_jadwal(request, pk):
+    jadwal = get_object_or_404(Jadwal, pk=pk)
+    if request.method == 'POST':
+        form = JadwalUpdateForm(request.POST, instance=jadwal)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Jadwal updated successfully.')
+            return redirect('index_jadwal')
+    else:
+        form = JadwalUpdateForm(instance=jadwal)
+    return render(request, 'update_jadwal.html', {'form': form, 'jadwal': jadwal})
+
+# Absensi Views
+
+
+@login_required
+def index_absensi(request):
+    absensis = Absensi.objects.all()
+    return render(request, 'index_absensi.html', {'absensis': absensis})
+
+
+@login_required
+def create_absensi(request):
+    if request.method == 'POST':
+        form = AbsensiCreateForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Absensi created successfully.')
+            return redirect('index_absensi')
+    else:
+        form = AbsensiCreateForm()
+    return render(request, 'create_absensi.html', {'form': form})
+
+
+@login_required
+def update_absensi(request, pk):
+    absensi = get_object_or_404(Absensi, pk=pk)
+    if request.method == 'POST':
+        form = AbsensiUpdateForm(request.POST, instance=absensi)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Absensi updated successfully.')
+            return redirect('index_absensi')
+    else:
+        form = AbsensiUpdateForm(instance=absensi)
+    return render(request, 'update_absensi.html', {'form': form})
+
+
+@login_required
+def delete_absensi(request, pk):
+    absensi = get_object_or_404(Absensi, pk=pk)
+    absensi.delete()
+    messages.success(request, 'Absensi deleted successfully.')
+    return redirect('index_absensi')
