@@ -45,7 +45,8 @@ def dashboard(request):
     #         return redirect('dashboard')  # Redirect to a success page or URL
     # else:
     # form = forms.CustomUserCreationForm()
-    user_create_form = forms.CustomUserCreationForm()
+    user_create_form = forms.UserCreateForm()
+    user_update_form = forms.UserUpdateForm()
     profil_admin_update_form = forms.ProfilAdminUpdateForm()
     profil_guru_update_form = forms.ProfilGuruUpdateForm()
     profil_siswa_update_form = forms.ProfilSiswaUpdateForm()
@@ -59,6 +60,7 @@ def dashboard(request):
         'context': {
 
             'user_create_form': user_create_form,
+            'user_update_form': user_update_form,
             'profil_admin_update_form': profil_admin_update_form,
             'profil_guru_update_form': profil_guru_update_form,
             'profil_siswa_update_form': profil_siswa_update_form,

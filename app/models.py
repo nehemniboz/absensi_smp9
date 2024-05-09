@@ -3,11 +3,21 @@ from django.contrib.auth.models import User
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
 import datetime
 import hashlib
 
 SECRET_KEY = '6e240d77b96eebbb74d1d37078f38d79fb20fb4fa0f9065c963bd3d3addcde65'
 
+
+def unique_user_validator(value):
+    from .models import ProfilAdmin, ProfilGuru, ProfilSiswa
+
+    if ProfilAdmin.objects.filter(user=value).exists() \
+            or ProfilGuru.objects.filter(user=value).exists() \
+            or ProfilSiswa.objects.filter(user=value).exists():
+        raise ValidationError(
+            'This user is already associated with another profile.')
 
 def get_current_time():
     return datetime.datetime.now().time()
@@ -32,7 +42,8 @@ class Jadwal(models.Model):
 class ProfileBase(models.Model):
     nama = models.CharField(max_length=50, null=True)
     alamat = models.CharField(max_length=50, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, validators=[
+                                unique_user_validator])
     email = models.EmailField(
         max_length=50, unique=False, null=True, blank=True)
 

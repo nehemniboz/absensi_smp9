@@ -31,63 +31,22 @@ class CustomUserAdmin(BaseUserAdmin):
         }),
     )
 
-    def get_readonly_fields(self, request, obj=None):
-        if obj:  # If editing an existing object
-            return self.readonly_fields + ('username', 'groups')
-        return self.readonly_fields
-
-# Custom form for ProfilAdmin
-
-
-class ProfilAdminForm(forms.ModelForm):
-    class Meta:
-        model = ProfilAdmin
-        fields = '__all__'
-        exclude = ['user']
-
-# Custom admin class for ProfilAdmin
-
-
-class ProfilAdminAdmin(admin.ModelAdmin):
-    form = ProfilAdminForm
-
-# Custom form for ProfilGuru
-
-
-class ProfilGuruForm(forms.ModelForm):
-    class Meta:
-        model = ProfilGuru
-        fields = '__all__'
-        exclude = ['user']
-
-# Custom admin class for ProfilGuru
-
-
-class ProfilGuruAdmin(admin.ModelAdmin):
-    form = ProfilGuruForm
-
-# Custom form for ProfilSiswa
-
-
-class ProfilSiswaForm(forms.ModelForm):
-    class Meta:
-        model = ProfilSiswa
-        fields = '__all__'
-        exclude = ['user']
-
-# Custom admin class for ProfilSiswa
-
-
-class ProfilSiswaAdmin(admin.ModelAdmin):
-    form = ProfilSiswaForm
+    def save_model(self, request, obj, form, change):
+        if change:
+            original_instance = User.objects.get(pk=obj.pk)
+            original_groups = original_instance.groups.all()
+            new_groups = form.cleaned_data.get('groups')
+            if new_groups and not original_groups == new_groups:
+                raise forms.ValidationError("Cannot update user groups.")
+        super().save_model(request, obj, form, change)
 
 
 # Register models and admin classes
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(ProfilAdmin, ProfilAdminAdmin)
-admin.site.register(ProfilGuru, ProfilGuruAdmin)
-admin.site.register(ProfilSiswa, ProfilSiswaAdmin)
+admin.site.register(ProfilAdmin)
+admin.site.register(ProfilGuru)
+admin.site.register(ProfilSiswa)
 admin.site.register(Angkatan)
 admin.site.register(Jadwal)
 admin.site.register(Absensi)
