@@ -42,15 +42,3 @@
   </section>
 {% endblock %}
 
-{% block page_js %}
-  <script>
-    $(document).ready(function () {
-      $('.custom-control-input').on('change', function () {
-        // Uncheck all checkboxes
-        $('.custom-control-input').prop('checked', false)
-        // Check the clicked checkbox
-        $(this).prop('checked', true)
-      })
-    })
-  </script>
-{% endblock %}

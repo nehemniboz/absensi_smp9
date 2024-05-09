@@ -68,6 +68,25 @@
 
         <!-- Main Content -->
         <div class="main-content">
+          {% if messages %}
+            <section class="section">
+              <div class="container">
+                {% for message in messages %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">{{ message }}</div>
+                {% endfor %}
+              </div>
+            </section>
+            <script>
+              window.setTimeout(function () {
+                $('.alert')
+                  .fadeTo(500, 0)
+                  .slideUp(500, function () {
+                    $(this).remove()
+                  })
+              }, 700)
+            </script>
+          {% endif %}
+
           {% block content %}
 
           {% endblock %}
@@ -95,10 +114,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!--   
+    <!--      
     JSPM Generator Import Map
     Edit URL: https://generator.jspm.io/#U2NjYGBkDM0rySzJSU1hcKiqyMxL18/JTCpKLKp0MNAzMtQzAABgbxE9JAA
-     -->
+        -->
     <script type="importmap">
   {
     "imports": {

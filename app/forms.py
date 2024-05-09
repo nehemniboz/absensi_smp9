@@ -63,7 +63,7 @@ class UserCreateForm(UserBaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper.form_action = reverse_lazy('dashboard')
+        self.helper.form_action = reverse_lazy('create_user')
 
 
 class UserUpdateForm(UserBaseForm):
@@ -93,7 +93,7 @@ class UserUpdateForm(UserBaseForm):
             original_instance = User.objects.get(pk=instance.pk)
             original_groups = original_instance.groups.all()
             new_groups = self.cleaned_data.get('groups')
-            if new_groups and not original_groups == new_groups:
+            if original_groups != new_groups:
                 raise forms.ValidationError("Cannot update user groups.")
         return self.cleaned_data['groups']
 
@@ -113,7 +113,7 @@ class UserUpdateForm(UserBaseForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
-                'dashboard', kwargs={'pk': self.instance.pk})
+                'update_user', kwargs={'pk': self.instance.pk})
 
 
 class ProfilBaseForm(ModelForm):

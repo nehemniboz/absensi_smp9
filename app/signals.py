@@ -17,7 +17,8 @@ def current_year():
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        angkatan = Angkatan.objects.get_or_create(tahun_ajaran=current_year())
+        angkatan, created = Angkatan.objects.get_or_create(
+            tahun_ajaran=current_year())
         cleaned_data = getattr(thread_data, 'cleaned_data', None)
         if cleaned_data and 'groups' in cleaned_data:
             groups = cleaned_data['groups']
