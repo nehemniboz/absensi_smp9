@@ -25,12 +25,19 @@
                 <h4>Selamat datang {{ request.user }}</h4>
               </div>
               <div class="card-body p-3">
-                <img src="{% qr_url_from_text qr_code image_format='png' error_correction='m' size=5 version=10 %}" alt="QR Code" />
-                <form method="post" action="{% url 'qr_pdf' %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="id" value="{{ request.user.id }}" />
-                  <button type="submit" class="btn btn-outline-info btn-sm">Generate PDF</button>
-                </form>
+                <div class="row">
+                  <div class="col-md-6">
+                    <img src="{% qr_url_from_text qr_code image_format='png' error_correction='m' size=5 version=10 %}" alt="QR Code" />
+                    <form method="post" action="{% url 'qr_pdf' %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="id" value="{{ request.user.id }}" />
+                      <button type="submit" class="btn btn-outline-info btn-sm">Generate PDF</button>
+                    </form>
+                  </div>
+                  <div class="col-md-6">
+                    <a href="{% url 'index' %}" target="_blank" class="btn btn-outline-primary btn-round btn-md mt-3">Absen</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

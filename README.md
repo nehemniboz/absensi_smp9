@@ -6,7 +6,7 @@
 - Saparate Pages for Absensi Masuk & Pulang // Done
 - Jadwal Page
 - Database Seeder for Jadwals // Done
-- Group siswa button on Angkatan & Absensi
+- Group siswa button on Angkatan & Absensi // Done
 
 python manage.py dumpdata app.Jadwal --output Jadwal.json
 python manage.py loaddata Jadwal.json 

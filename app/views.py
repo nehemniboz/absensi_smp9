@@ -1,3 +1,4 @@
+from django.db.models import Q
 from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm, UserProfileForm
 from .models import User, ProfilAdmin, ProfilGuru, ProfilSiswa, Angkatan, Jadwal, Absensi
 from django.shortcuts import render
@@ -340,13 +341,18 @@ def delete_profil_siswa(request, pk):
     messages.success(request, 'Profil Siswa deleted successfully.')
     return redirect('index_profil_siswa')
 
-# Angkatan Views
 
+# Angkatan Views
 
 @login_required
 @check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_angkatan(request):
     angkatans = Angkatan.objects.all()
+
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        angkatans = Angkatan.objects.filter(Q(profilsiswa__user=request.user))
+
     return render(request, 'index_angkatan.html', {'angkatans': angkatans})
 
 
@@ -418,6 +424,11 @@ def update_jadwal(request, pk):
 @check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_absensi(request):
     absensis = Absensi.objects.all()
+
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        absensis = Absensi.objects.filter(profil_siswa=siswa_instance)
+
     return render(request, 'index_absensi.html', {'absensis': absensis})
 
 
