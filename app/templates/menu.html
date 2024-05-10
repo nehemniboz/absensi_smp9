@@ -40,7 +40,6 @@
         </li>
       </ul>
     </li>
-    {% if request.user|has_group:'ADMIN' or request.user|has_group:'GURU' or request.user|has_group:'SISWA' %}
     <li class="nav-item dropdown">
       <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="far fa-file-alt"></i> <span>Data Absensi</span></a>
       <ul class="dropdown-menu">
@@ -49,6 +48,11 @@
         </li>
       </ul>
     </li>
-    {% endif %}
   {% endif %}
+    {% if request.user|has_group:'ADMIN' %}
+      <li class="menu-header">Jadwal</li>
+    <li>
+      <a class="nav-link" href="{% url 'index_jadwal' %}"><i class='far fa-calendar-alt'></i><span>Jadwal</span></a>
+    </li>
+      {% endif %}
 </ul>

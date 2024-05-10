@@ -4,7 +4,7 @@
 - Groups Decorators Permission // Done
 - Login Middleware for Logged // Done
 - Saparate Pages for Absensi Masuk & Pulang // Done
-- Jadwal Page
+- Jadwal Page // Done
 - Database Seeder for Jadwals // Done
 - Group siswa button on Angkatan & Absensi // Done
 

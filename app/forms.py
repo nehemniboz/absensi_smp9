@@ -248,6 +248,7 @@ class JadwalCreateForm(JadwalBaseForm):
 
 class JadwalUpdateForm(JadwalBaseForm):
     waktu = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+    nama = forms.CharField(disabled=True)  # Add this line
 
     class Meta:
         model = Jadwal
