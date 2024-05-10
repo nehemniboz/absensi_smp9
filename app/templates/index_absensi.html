@@ -19,7 +19,8 @@
               <h4>Absensi List</h4>
               <div class="card-header-form">
                 {% if request.user|has_group:'ADMIN' or request.user|has_group:'GURU' %}
-                  <a class="btn btn-primary text-white" href="{% url 'create_absensi' %}">Tambah</a>
+                  <a class="btn btn-primary text-white mr-2" href="{% url 'create_absensi' %}">Tambah</a>
+                  <a class="btn btn-success text-white" href="{% url 'export_absensi' %}">Export</a>
                 {% endif %}
               </div>
             </div>

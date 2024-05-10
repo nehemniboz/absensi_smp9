@@ -59,6 +59,7 @@ urlpatterns = [
     path('create_absensi/', views.create_absensi, name='create_absensi'),
     path('update_absensi/<int:pk>/', views.update_absensi, name='update_absensi'),
     path('delete_absensi/<int:pk>/', views.delete_absensi, name='delete_absensi'),
+    path('export_absensi/', views.export_absensi, name='export_absensi'),
     
     path('index_jadwal/', views.index_jadwal, name='index_jadwal'),
     path('update_jadwal/<int:pk>/', views.update_jadwal, name='update_jadwal'),

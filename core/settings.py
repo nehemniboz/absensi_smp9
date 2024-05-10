@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'django_extensions',
     'qr_code',
-
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +147,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = 'dashboard'
 
 LOGOUT_REDIRECT_URL = 'index'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
