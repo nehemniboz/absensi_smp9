@@ -3,33 +3,28 @@
 {% load static %}
 
 {% block content_index %}
-  <section class="section">
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
-          <div class="login-brand">Stisla</div>
-
-          <div class="card card-primary">
-            <div class="card-header">
-              <h4>Lorem</h4>
-            </div>
-
-            <div class="card-body text-center">
-              <div class="row justify-content-center">
-                <div class="col">
-                  <a href="{% url 'absen' 'masuk' %}" class="btn btn-lg btn-round btn-primary text-white">Masuk</a>
-                </div>
-                <div class="col">
-                  <a href="{% url 'absen' 'pulang' %}" class="btn btn-lg btn-round btn-primary text-white">Pulang</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="simple-footer">Copyright © Stisla 2018</div>
-        </div>
-      </div>
+  <div class="card card-primary">
+    <div class="card-header">
+      <h4>Lorem</h4>
     </div>
-  </section>
+
+<div class="card-body text-center">
+  <div class="row justify-content-center mb-4">
+    <div class="col">
+      <a href="{% url 'absen' 'masuk' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Masuk</a>
+    </div>
+    <div class="col">
+      <a href="{% url 'absen' 'pulang' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Pulang</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <a href="{% url 'login' %}" class="btn btn-lg btn-success rounded-pill px-5 py-3">Login</a>
+    </div>
+  </div>
+</div>
+
+  </div>
 {% endblock %}
 
 {% block page_js %}

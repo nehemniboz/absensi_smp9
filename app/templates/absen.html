@@ -2,43 +2,28 @@
 {% load qr_code %}
 {% load static %}
 {% block content_index %}
-  <section class="section">
-    <div class="container mt-5">
-      <div class="row">
-
-          <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1">
-            <div class="login-brand">
-              Stisla
+  <div class="card card-primary">
+    <div class="row m-auto">
+      <div class="col-12 col-md-12 col-lg-12 p-0">
+        <div class="card-header text-center">
+          <h4>Lorem</h4>
+        </div>
+        <div class="card-body">
+          {% if jadwal %}
+            <div>
+              <video id="video" style="height: 30rem; width: 40rem;" autoplay></video>
+              {% csrf_token %}
             </div>
-
-            <div class="card card-primary">
-              <div class="row m-auto">
-                <div class="col-12 col-md-12 col-lg-12 p-0">
-                  <div class="card-header text-center"><h4>Lorem</h4></div>
-                  <div class="card-body">
-              {% if jadwal %}
-                <div>
-                  <video id="video" style="height: 30rem; width: 40rem;" autoplay></video>
-                {% csrf_token %}
-                </div>
-              {% else %}
-                <div>
-                  <p>Invalid jadwal. Please go back.</p>
-                  <a href="{% url 'index' %}">Go back</a>
-                </div>
-              {% endif %}
-                  </div>  
-                </div>
-              </div>
+          {% else %}
+            <div>
+              <p>Invalid jadwal. Please go back.</p>
+              <a href="{% url 'index' %}">Go back</a>
             </div>
-            <div class="simple-footer">
-              Copyright © Stisla 2018
-            </div>
-          </div>
-        
+          {% endif %}
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 {% endblock %}
 {% block page_js %}
   <script type="module">
@@ -89,7 +74,6 @@
             icon: data.type === 'success' ? 'success' : 'error',
             title: data.message
           })
-
         } else {
           throw new Error('No video input devices found.')
         }

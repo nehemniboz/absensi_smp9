@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport" />
-    <title>{{ title|safe }} &mdash; {{ site_name }}</title>
+    <title>Absensi</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
@@ -19,9 +19,19 @@
 
   <body>
     <div id="app">
-      {% block content_index %}
-        
-      {% endblock content_index %}
+      <section class="section">
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1">
+              <div class="login-brand">Stisla</div>
+              {% block content_index %}
+
+              {% endblock %}
+              <div class="simple-footer">Copyright © Stisla 2018</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- General JS Scripts -->
@@ -32,17 +42,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="{% static 'assets/js/stisla.js' %}"></script>
 
-    
     <!-- Template JS File -->
     <script src="{% static 'assets/js/scripts.js' %}"></script>
     <script src="{% static 'assets/js/custom.js' %}"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <!--       
+    <!--        
     JSPM Generator Import Map
     Edit URL: https://generator.jspm.io/#U2NjYGBkDM0rySzJSU1hcKiqyMxL18/JTCpKLKp0MNAzMtQzAABgbxE9JAA
-         -->
+          -->
     <script type="importmap">
   {
     "imports": {
@@ -103,8 +112,8 @@
     <link rel="modulepreload" href="https://ga.jspm.io/npm:ts-custom-error@3.3.1/dist/custom-error.mjs" />
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
 
-    {% block page_js %}{% endblock %}
+    {% block page_js %}
+    {% endblock %}
   </body>
 </html>
