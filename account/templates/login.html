@@ -13,9 +13,6 @@
             {% csrf_token %}
             {{ form|crispy }}
             <div class="form-group text-right">
-              {% comment %} <a href="{% url 'reset_password' %}" class="float-left mt-3"> {% endcomment %}
-                Forgot Password?
-              </a>
               <button type="submit" class="btn btn-primary btn-lg btn-icon icon-right" tabindex="4">
                 Login
               </button>

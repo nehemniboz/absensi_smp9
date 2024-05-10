@@ -1,0 +1,119 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport" />
+    <title>Absensi</title>
+
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/components.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}" />
+  </head>
+
+  <body>
+    <div id="app">
+      <section class="section">
+        <div class="container mt-5">
+          <div class="row">
+            <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1">
+              <div class="login-brand">Stisla</div>
+              {% block content_index %}
+
+              {% endblock %}
+              <div class="simple-footer">Copyright © Stisla 2018</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- General JS Scripts -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="{% static 'assets/js/stisla.js' %}"></script>
+
+    <!-- Template JS File -->
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!--        
+    JSPM Generator Import Map
+    Edit URL: https://generator.jspm.io/#U2NjYGBkDM0rySzJSU1hcKiqyMxL18/JTCpKLKp0MNAzMtQzAABgbxE9JAA
+          -->
+    <script type="importmap">
+  {
+    "imports": {
+      "@zxing/library": "https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/index.js"
+    },
+    "scopes": {
+      "https://ga.jspm.io/": {
+        "ts-custom-error": "https://ga.jspm.io/npm:ts-custom-error@3.3.1/dist/custom-error.mjs"
+      }
+    }
+  }
+  </script>
+
+    <!-- ES Module Shims: Import maps polyfill for older browsers without import maps support (eg Safari 16.3) -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js" crossorigin="anonymous"></script>
+
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/2ioUCsbh.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/4SMZIQ1d.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/5scbEfWL.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/7mVXK79e.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/8KgbN4Zd.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/Awb4I4tx.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/DEmAl519.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/Jt3kuSSS.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/P7KdmYT9.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/Qr902gI8.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/Qw__oxez.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/TYwz7rS1.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/Yn9cgtWC.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/ZWms6Chh.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/e0lobKIl.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/haUF2MF4.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/n4J2-Sjc.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/q5vCL2jz.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/rDnSDhkC.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/rbRZdJcS.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/s7CliL8g.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/_/z1-yJUi8.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/BarcodeFormat.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/BinaryBitmap.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/DecodeHintType.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/EncodeHintType.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/IllegalArgumentException.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/InvertedLuminanceSource.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/LuminanceSource.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/WriterException.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/aztec/AztecDetectorResult.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/aztec/decoder/Decoder.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/common/BitArray.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/decoder/Mode.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/decoder/QRCodeDecoderMetaData.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/detector/Detector.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/detector/FinderPatternFinder.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/detector/FinderPatternInfo.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/encoder/ByteMatrix.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/core/qrcode/encoder/QRCode.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:@zxing/library@0.21.0/esm/index.js" />
+    <link rel="modulepreload" href="https://ga.jspm.io/npm:ts-custom-error@3.3.1/dist/custom-error.mjs" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% block page_js %}
+    {% endblock %}
+  </body>
+</html>

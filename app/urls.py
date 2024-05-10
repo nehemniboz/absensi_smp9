@@ -3,15 +3,14 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),
-    #     path('informasi_akun/', views.informasi_akun, name='informasi_akun'),
-    #     path('informasi_akun_update/<int:pk>/',
-    #          views.informasi_akun_update, name='informasi_akun_update'),
-    #     path('informasi_akun_delete/<int:pk>/',
-    #          views.informasi_akun_delete, name='informasi_akun_delete'),
-    path('absen/<str:jadwal>/', views.index, name="index"),
+    path('', views.index, name="index"),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('absen/<str:jadwal>/', views.absen, name="absen"),
     path('qr_pdf/', views.render_pdf_view, name="qr_pdf"),
     path('qr_codes/', views.qr_code_check, name='qr_code_check'),
+    
+    path('user-profile-update', views.user_profile_update,
+         name='user_profile_update'),
 
 
     path('index_user/', views.index_user, name='index_user'),
@@ -60,4 +59,7 @@ urlpatterns = [
     path('create_absensi/', views.create_absensi, name='create_absensi'),
     path('update_absensi/<int:pk>/', views.update_absensi, name='update_absensi'),
     path('delete_absensi/<int:pk>/', views.delete_absensi, name='delete_absensi'),
+    
+    path('index_jadwal/', views.index_jadwal, name='index_jadwal'),
+    path('update_jadwal/<int:pk>/', views.update_jadwal, name='update_jadwal'),
 ]

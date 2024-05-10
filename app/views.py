@@ -1,10 +1,14 @@
-from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalCreateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm
+from django.db.models import Q
+from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm, UserProfileForm
 from .models import User, ProfilAdmin, ProfilGuru, ProfilSiswa, Angkatan, Jadwal, Absensi
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import get_template
 from django.db import IntegrityError
 from django.http import HttpRequest
+from django.contrib.auth import logout
+
+from .decorators import check_group
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -29,68 +33,20 @@ def link_callback(uri, rel, request):
 
     return f"{HOSTNAME}{uri}"
 
+def index(request):
+    context = {}
+    
+    return render(request, 'index.html', context)
 
-@login_required
-def dashboard(request):
-    # if request.method == 'POST':
-    #     form = forms.CustomUserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('dashboard')  # Redirect to a success page or URL
-    # else:
-    # form = forms.CustomUserCreationForm()
-
-    user_create_form = UserCreateForm()
-    user_update_form = UserUpdateForm()
-    profil_admin_create_form = ProfilAdminCreateForm()
-    profil_admin_update_form = ProfilAdminUpdateForm()
-    profil_guru_create_form = ProfilGuruCreateForm()
-    profil_guru_update_form = ProfilGuruUpdateForm()
-    profil_siswa_create_form = ProfilSiswaCreateForm()
-    profil_siswa_update_form = ProfilSiswaUpdateForm()
-    angkatan_create_form = AngkatanCreateForm()
-    angkatan_update_form = AngkatanUpdateForm()
-    jadwal_update_form = JadwalUpdateForm()
-    absensi_create_form = AbsensiCreateForm()
-    absensi_update_form = AbsensiUpdateForm()
-
-    context = {
-        'form': absensi_create_form,
-        'context': {
-
-            'user_create_form': user_create_form,
-            'user_update_form': user_update_form,
-            'profil_admin_create_form': profil_admin_create_form,
-            'profil_admin_update_form': profil_admin_update_form,
-            'profil_guru_create_form': profil_guru_create_form,
-            'profil_guru_update_form': profil_guru_update_form,
-            'profil_siswa_create_form': profil_siswa_create_form,
-            'profil_siswa_update_form': profil_siswa_update_form,
-            'angkatan_create_form': angkatan_create_form,
-            'angkatan_update_form': angkatan_update_form,
-            'jadwal_update_form': jadwal_update_form,
-            'absensi_create_form': absensi_create_form,
-            'absensi_update_form': absensi_update_form,
-
-        }
-    }
-
-    return render(request, 'dashboard.html', context)
-
-
-def index(request, jadwal):
+def absen(request, jadwal):
     # Get the Jadwal object based on the jadwal parameter
     jadwal_object = get_object_or_404(Jadwal, nama__iexact=jadwal)
-
-    akun_instance = ProfilSiswa.objects.get(pk=6)
-    qr_code_hash = akun_instance.hash
-
+    
     context = {
-        'qr_code': qr_code_hash,
         'jadwal': jadwal_object
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'absen.html', context)
 
 
 def qr_code_check(request):
@@ -114,26 +70,32 @@ def qr_code_check(request):
             else:
                 return JsonResponse({'message': 'Jadwal not found', 'type': 'failed'}, status=200)
         else:
-            return JsonResponse({'message': 'ProfilSiswa not found', 'type': 'failed'}, status=200)
+            return JsonResponse({'message': 'Siswa not found', 'type': 'failed'}, status=200)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=400)
 
 
 # Render PDF
-
+@login_required
+@check_group(['SISWA'])
 def render_pdf_view(request):
-    template_path = 'qr_pdf.html'
+    if request.method == 'POST':
+        user_id = request.POST.get('id')
 
-    # Or retrieve it based on some condition
-    akun_instance = ProfilSiswa.objects.first()
+        # Retrieve the user object using the user ID
+        try:
+            user = User.objects.get(id=user_id)
+            siswa_instance = ProfilSiswa.objects.get(user=user)
+        except (User.DoesNotExist, ProfilSiswa.DoesNotExist):
+            return HttpResponse('Invalid user ID')
 
-    # Ensure akun_instance exists before proceeding
-    if akun_instance:
+        template_path = 'qr_pdf.html'
+
         # Get the name and NISN from the ProfilSiswa instance
-        nama = akun_instance.nama
-        nisn = akun_instance.nisn
+        nama = siswa_instance.nama
+        nisn = siswa_instance.nisn
         # Generate the hash
-        qr_code_hash = akun_instance.hash
+        qr_code_hash = siswa_instance.hash
 
         context = {
             'qr_code': qr_code_hash,
@@ -155,12 +117,46 @@ def render_pdf_view(request):
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html + '</pre>')
         return response
+
     else:
-        # Handle case where no ProfilSiswa instance is found
-        return HttpResponse('No ProfilSiswa instance found')
+        return HttpResponse('Method not allowed')
+
+
+@login_required
+def dashboard(request):
+    qr_code = ''
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        qr_code = siswa_instance.hash
+
+    context = {
+        'qr_code': qr_code,
+    }
+
+    return render(request, 'dashboard.html', context)
+
+@login_required
+def user_profile_update(request):
+    user = request.user
+    form = UserProfileForm(instance=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            logout(request)
+            return redirect('user_profile_update')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'user_profile_update.html', context)
 
 
 # User Views
+@login_required
+@check_group(['ADMIN'])
 def index_user(request):
     # Get all users excluding the currently logged-in user
     users = User.objects.exclude(pk=request.user.pk)
@@ -168,6 +164,7 @@ def index_user(request):
 
 
 @login_required
+@check_group(['ADMIN'])
 def create_user(request):
     if request.method == 'POST':
         form = UserCreateForm(request.POST)
@@ -181,6 +178,7 @@ def create_user(request):
 
 
 @login_required
+@check_group(['ADMIN'])
 def update_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -195,6 +193,7 @@ def update_user(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def delete_user(request, pk):
     user = get_object_or_404(User, pk=pk)
     user.delete()
@@ -205,12 +204,14 @@ def delete_user(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def index_profil_admin(request):
     profil_admins = ProfilAdmin.objects.all()
     return render(request, 'index_profil_admin.html', {'profil_admins': profil_admins})
 
 
 @login_required
+@check_group(['ADMIN'])
 def create_profil_admin(request):
     if request.method == 'POST':
         form = ProfilAdminCreateForm(request.POST)
@@ -224,6 +225,7 @@ def create_profil_admin(request):
 
 
 @login_required
+@check_group(['ADMIN'])
 def update_profil_admin(request, pk):
     profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
     if request.method == 'POST':
@@ -238,6 +240,7 @@ def update_profil_admin(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def delete_profil_admin(request, pk):
     profil_admin = get_object_or_404(ProfilAdmin, pk=pk)
     profil_admin.delete()
@@ -248,12 +251,14 @@ def delete_profil_admin(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def index_profil_guru(request):
     profil_gurus = ProfilGuru.objects.all()
     return render(request, 'index_profil_guru.html', {'profil_gurus': profil_gurus})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_profil_guru(request):
     if request.method == 'POST':
         form = ProfilGuruCreateForm(request.POST)
@@ -267,6 +272,7 @@ def create_profil_guru(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     if request.method == 'POST':
@@ -281,6 +287,7 @@ def update_profil_guru(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     profil_guru.delete()
@@ -291,12 +298,14 @@ def delete_profil_guru(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def index_profil_siswa(request):
     profil_siswas = ProfilSiswa.objects.all()
     return render(request, 'index_profil_siswa.html', {'profil_siswas': profil_siswas})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_profil_siswa(request):
     if request.method == 'POST':
         form = ProfilSiswaCreateForm(request.POST)
@@ -310,6 +319,7 @@ def create_profil_siswa(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_profil_siswa(request, pk):
     profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
     if request.method == 'POST':
@@ -324,22 +334,30 @@ def update_profil_siswa(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_profil_siswa(request, pk):
     profil_siswa = get_object_or_404(ProfilSiswa, pk=pk)
     profil_siswa.delete()
     messages.success(request, 'Profil Siswa deleted successfully.')
     return redirect('index_profil_siswa')
 
+
 # Angkatan Views
 
-
 @login_required
+@check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_angkatan(request):
     angkatans = Angkatan.objects.all()
+
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        angkatans = Angkatan.objects.filter(Q(profilsiswa__user=request.user))
+
     return render(request, 'index_angkatan.html', {'angkatans': angkatans})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_angkatan(request):
     if request.method == 'POST':
         form = AngkatanCreateForm(request.POST)
@@ -353,6 +371,7 @@ def create_angkatan(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_angkatan(request, pk):
     angkatan = get_object_or_404(Angkatan, pk=pk)
     if request.method == 'POST':
@@ -367,6 +386,7 @@ def update_angkatan(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_angkatan(request, pk):
     angkatan = get_object_or_404(Angkatan, pk=pk)
     angkatan.delete()
@@ -377,12 +397,14 @@ def delete_angkatan(request, pk):
 
 
 @login_required
+@check_group(['ADMIN'])
 def index_jadwal(request):
     jadwals = Jadwal.objects.all()
     return render(request, 'index_jadwal.html', {'jadwals': jadwals})
 
 
 @login_required
+@check_group(['ADMIN'])
 def update_jadwal(request, pk):
     jadwal = get_object_or_404(Jadwal, pk=pk)
     if request.method == 'POST':
@@ -399,12 +421,19 @@ def update_jadwal(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_absensi(request):
     absensis = Absensi.objects.all()
+
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        absensis = Absensi.objects.filter(profil_siswa=siswa_instance)
+
     return render(request, 'index_absensi.html', {'absensis': absensis})
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def create_absensi(request):
     if request.method == 'POST':
         form = AbsensiCreateForm(request.POST)
@@ -418,6 +447,7 @@ def create_absensi(request):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def update_absensi(request, pk):
     absensi = get_object_or_404(Absensi, pk=pk)
     if request.method == 'POST':
@@ -432,6 +462,7 @@ def update_absensi(request, pk):
 
 
 @login_required
+@check_group(['ADMIN', 'GURU'])
 def delete_absensi(request, pk):
     absensi = get_object_or_404(Absensi, pk=pk)
     absensi.delete()

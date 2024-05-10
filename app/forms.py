@@ -1,5 +1,5 @@
 from django.forms import ModelForm, CharField, EmailField, ChoiceField, PasswordInput
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Submit,  Div, HTML, Field, Layout
 from .models import ProfilAdmin, ProfilSiswa, ProfilGuru, Angkatan, Jadwal, Absensi
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -67,21 +67,12 @@ class UserCreateForm(UserBaseForm):
 
 
 class UserUpdateForm(UserBaseForm):
-
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
 
     class Meta:
         model = User
         fields = ['username', 'groups']
-
-    # def clean_password2(self):
-    #     # Check that the two password entries match
-    #     password1 = self.cleaned_data.get("password1")
-    #     password2 = self.cleaned_data.get("password2")
-    #     if password1 and password2 and password1 != password2:
-    #         raise forms.ValidationError("Passwords don't match")
-    #     return password2
 
     def clean_groups(self):
         # Ensure groups can't be updated
@@ -91,7 +82,7 @@ class UserUpdateForm(UserBaseForm):
             original_instance = User.objects.get(pk=instance.pk)
             original_groups = original_instance.groups.all()
             new_groups = self.cleaned_data.get('groups')
-            if original_groups != new_groups:
+            if original_groups.first() != new_groups.first():
                 raise forms.ValidationError("Cannot update user groups.")
         return self.cleaned_data['groups']
 
@@ -101,7 +92,6 @@ class UserUpdateForm(UserBaseForm):
 
         # Call the super save method to save the user object
         user = super().save(commit=False)
-        # user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
             self.save_m2m()  # Save the many-to-many relationships (groups)
@@ -112,6 +102,9 @@ class UserUpdateForm(UserBaseForm):
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
                 'update_user', kwargs={'pk': self.instance.pk})
+
+        self.fields.pop('password1', None)
+        self.fields.pop('password2', None)
 
 
 class ProfilBaseForm(ModelForm):
@@ -255,6 +248,7 @@ class JadwalCreateForm(JadwalBaseForm):
 
 class JadwalUpdateForm(JadwalBaseForm):
     waktu = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+    nama = forms.CharField(disabled=True)  # Add this line
 
     class Meta:
         model = Jadwal
@@ -299,3 +293,38 @@ class AbsensiUpdateForm(AbsensiBaseForm):
         if self.instance.pk:
             self.helper.form_action = reverse_lazy(
                 'update_absensi', kwargs={'pk': self.instance.pk})
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_action = reverse_lazy('user_profile_update')
+        self.helper.form_method = 'POST'
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    Field('username', css_class='form-control'),
+                    css_class='col-md-5 col-12'
+                ),
+                Div(
+                    Field('email', css_class='form-control'),
+                    css_class='col-md-7 col-12'
+                ),
+                css_class='row'
+            ),
+            Div(
+                HTML('<a href="{}" class="float-left mt-3">Change Password</a>'.format(
+                    reverse_lazy('password_change'))),
+                css_class="form-group col-12"
+            ),
+            Div(
+                Submit('submit', 'Change Profile',
+                       css_class="btn btn-primary btn-lg btn-icon icon-right"),
+                css_class="text-right"
+            )
+        )

@@ -1,97 +1,32 @@
-{% extends 'base.html' %}
-{% load qr_code %}
+{% extends 'base_index.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
-{% block content %}
-  {% if user.is_authenticated %}
-    <!-- If the user is authenticated, display the QR code -->
-    {% if jadwal %}
-      <video id="video" style="height: 30rem; width: 40rem;" autoplay></video>
 
-      {% csrf_token %}
-      <div>
-        <img src="{% qr_url_from_text qr_code image_format='png' error_correction='h' size=5 version=12 %}" alt="QR Code" />
-      </div>
-    {% else %}
-      <!-- Display a message and provide a link to return back -->
-      <div>
-        <p>Invalid jadwal. Please go back.</p>
-        <a href="">Go back</a>
-      </div>
-    {% endif %}
-  {% else %}
-    <!-- If the user is not authenticated, display a message to login -->
-    <img src="#" alt="Login Required: Please login to access the QR code" />
-  {% endif %}
-  <img src="{% static 'img/img-blank.png' %}" alt="">
+{% block content_index %}
+  <div class="card card-primary">
+    <div class="card-header">
+      <h4>Lorem</h4>
+    </div>
+
+<div class="card-body text-center">
+  <div class="row justify-content-center mb-4">
+    <div class="col">
+      <a href="{% url 'absen' 'masuk' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Masuk</a>
+    </div>
+    <div class="col">
+      <a href="{% url 'absen' 'pulang' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Pulang</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <a href="{% url 'login' %}" class="btn btn-lg btn-success rounded-pill px-5 py-3">Login</a>
+    </div>
+  </div>
+</div>
+
+  </div>
 {% endblock %}
+
 {% block page_js %}
-  <script type="module">
-    import { BrowserQRCodeReader } from '@zxing/library'
-    
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 900,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer
-        toast.onmouseleave = Swal.resumeTimer
-      }
-    })
-    
-    const startQRCodeScan = async () => {
-      try {
-        const codeReader = new BrowserQRCodeReader()
-        const result = await codeReader.getVideoInputDevices(undefined, 'video')
-    
-        if (result && result.length) {
-          const scanResult = await codeReader.decodeFromInputVideoDevice(result[0].deviceId, 'video')
-          const qrDataFromReader = scanResult.text
-    
-          const formData = new FormData()
-          formData.append('qr_data', qrDataFromReader)
-    
-          const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value
-          formData.append('csrfmiddlewaretoken', csrfToken)
-    
-          formData.append('jadwal', '{{ jadwal }}')
-    
-          const response = await fetch('/qr_codes/', {
-            method: 'POST',
-            body: formData
-          })
-    
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-    
-          const data = await response.json()
-    
-          // Show response using SweetAlert toast
-          Toast.fire({
-            icon: data.type === 'success' ? 'success' : 'error',
-            title: data.message
-          })
-    
-          console.log(data)
-        } else {
-          throw new Error('No video input devices found.')
-        }
-      } catch (error) {
-        console.error('Error:', error)
-        // Show error toast using SweetAlert
-        Toast.fire({
-          icon: 'error',
-          title: error.message || 'An error occurred. Please try again later.'
-        })
-      } finally {
-        // Restart QR code scan after showing toast with a delay of 1000 milliseconds (1 second)
-        setTimeout(startQRCodeScan, 1000)
-      }
-    }
-    
-    // Start QR code scan initially
-    startQRCodeScan()
-  </script>
+
 {% endblock %}
