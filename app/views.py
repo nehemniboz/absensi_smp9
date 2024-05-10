@@ -32,33 +32,20 @@ def link_callback(uri, rel, request):
 
     return f"{HOSTNAME}{uri}"
 
-
-@login_required
-def dashboard(request):
-    if request.user.groups.filter(name='SISWA').exists():
-        siswa_instance = ProfilSiswa.objects.get(user=request.user)
-        qr_code = siswa_instance.hash
+def index(request):
+    context = {}
     
-    context = {
-        'qr_code': qr_code,
-    }
+    return render(request, 'index.html', context)
 
-    return render(request, 'dashboard.html', context)
-
-
-def index(request, jadwal):
+def absen(request, jadwal):
     # Get the Jadwal object based on the jadwal parameter
     jadwal_object = get_object_or_404(Jadwal, nama__iexact=jadwal)
-
-    akun_instance = ProfilSiswa.objects.get(pk=6)
-    qr_code_hash = akun_instance.hash
-
+    
     context = {
-        'qr_code': qr_code_hash,
         'jadwal': jadwal_object
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'absen.html', context)
 
 
 def qr_code_check(request):
@@ -82,7 +69,7 @@ def qr_code_check(request):
             else:
                 return JsonResponse({'message': 'Jadwal not found', 'type': 'failed'}, status=200)
         else:
-            return JsonResponse({'message': 'ProfilSiswa not found', 'type': 'failed'}, status=200)
+            return JsonResponse({'message': 'Siswa not found', 'type': 'failed'}, status=200)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=400)
 
@@ -133,6 +120,19 @@ def render_pdf_view(request):
     else:
         return HttpResponse('Method not allowed')
 
+
+@login_required
+def dashboard(request):
+    qr_code = ''
+    if request.user.groups.filter(name='SISWA').exists():
+        siswa_instance = ProfilSiswa.objects.get(user=request.user)
+        qr_code = siswa_instance.hash
+
+    context = {
+        'qr_code': qr_code,
+    }
+
+    return render(request, 'dashboard.html', context)
 
 @login_required
 def user_profile_update(request):
