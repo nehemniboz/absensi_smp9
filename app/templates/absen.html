@@ -26,9 +26,8 @@
   </div>
 {% endblock %}
 {% block page_js %}
-  <script type="module">
-    import { BrowserQRCodeReader } from '@zxing/library'
-    
+  <script>
+
     const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -43,11 +42,24 @@
     
     const startQRCodeScan = async () => {
       try {
-        const codeReader = new BrowserQRCodeReader()
+        const codeReader = new ZXing.BrowserMultiFormatReader()
         const result = await codeReader.getVideoInputDevices(undefined, 'video')
     
         if (result && result.length) {
+const hints = { formats: "CODE_128" };
+        
+        // Decode barcode from the first available video input device with CODE_128 format
+        const scanResult = await codeReader.decodeFromInputVideoDevice(result[0].deviceId, 'video', hints);// Pass hints to enable specific formats
+
+      console.log(scanResult);
+      const barcodeDataFromReader = scanResult.text; // Renamed the variable
+      // Further processing of the barcode data
+    }
+
+        {% comment %} if (result && result.length) {
           const scanResult = await codeReader.decodeFromInputVideoDevice(result[0].deviceId, 'video')
+
+          console.log(scanResult);
           const qrDataFromReader = scanResult.text
     
           const formData = new FormData()
@@ -76,7 +88,7 @@
           })
         } else {
           throw new Error('No video input devices found.')
-        }
+        } {% endcomment %}
       } catch (error) {
         console.error('Error:', error)
         // Show error toast using SweetAlert

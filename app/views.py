@@ -1,3 +1,5 @@
+from datetime import datetime
+from .resources import AbsensiResource
 from django.db.models import Q
 from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm, UserProfileForm
 from .models import User, ProfilAdmin, ProfilGuru, ProfilSiswa, Angkatan, Jadwal, Absensi
@@ -33,15 +35,17 @@ def link_callback(uri, rel, request):
 
     return f"{HOSTNAME}{uri}"
 
+
 def index(request):
     context = {}
-    
+
     return render(request, 'index.html', context)
+
 
 def absen(request, jadwal):
     # Get the Jadwal object based on the jadwal parameter
     jadwal_object = get_object_or_404(Jadwal, nama__iexact=jadwal)
-    
+
     context = {
         'jadwal': jadwal_object
     }
@@ -134,6 +138,7 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
 
 @login_required
 def user_profile_update(request):
@@ -468,3 +473,22 @@ def delete_absensi(request, pk):
     absensi.delete()
     messages.success(request, 'Absensi deleted successfully.')
     return redirect('index_absensi')
+
+
+@login_required
+@check_group(['ADMIN', 'GURU'])
+def export_absensi(request):
+    absensi_resources = AbsensiResource()
+    dataset = absensi_resources.export()
+
+    # Get the current date
+    current_date = datetime.now().strftime("%d-%m-%Y")
+
+    # Construct the filename with the current date
+    filename = f"Absensi_{current_date}.xls"
+
+    response = HttpResponse(
+        dataset.xls, content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    return response
