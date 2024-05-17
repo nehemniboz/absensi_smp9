@@ -424,17 +424,19 @@ def update_jadwal(request, pk):
 
 # Absensi Views
 
+from .filters import AbsensiFilter
 
 @login_required
 @check_group(['ADMIN', 'GURU', 'SISWA'])
 def index_absensi(request):
-    absensis = Absensi.objects.all()
+    absensi_filter = AbsensiFilter(request.GET, queryset=Absensi.objects.all())
+    absensis = absensi_filter.qs
 
     if request.user.groups.filter(name='SISWA').exists():
         siswa_instance = ProfilSiswa.objects.get(user=request.user)
-        absensis = Absensi.objects.filter(profil_siswa=siswa_instance)
+        absensis = absensis.filter(profil_siswa=siswa_instance)
 
-    return render(request, 'index_absensi.html', {'absensis': absensis})
+    return render(request, 'index_absensi.html', {'absensis': absensis, 'absensi_filter': absensi_filter})
 
 
 @login_required
@@ -478,8 +480,13 @@ def delete_absensi(request, pk):
 @login_required
 @check_group(['ADMIN', 'GURU'])
 def export_absensi(request):
-    absensi_resources = AbsensiResource()
-    dataset = absensi_resources.export()
+    # Get the filtered queryset based on the filter parameters in the request
+    absensi_filter = AbsensiFilter(request.GET, queryset=Absensi.objects.all())
+    absensi_queryset = absensi_filter.qs
+
+    # Export the filtered queryset
+    absensi_resource = AbsensiResource()
+    dataset = absensi_resource.export(queryset=absensi_queryset)
 
     # Get the current date
     current_date = datetime.now().strftime("%d-%m-%Y")
@@ -487,6 +494,7 @@ def export_absensi(request):
     # Construct the filename with the current date
     filename = f"Absensi_{current_date}.xls"
 
+    # Prepare the HTTP response with the exported data
     response = HttpResponse(
         dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
