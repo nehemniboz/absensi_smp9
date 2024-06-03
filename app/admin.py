@@ -42,8 +42,8 @@ class CustomUserAdmin(BaseUserAdmin):
 
 
 # Register models and admin classes
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)
+# admin.site.unregister(User)
+# admin.site.register(User, CustomUserAdmin)
 admin.site.register(ProfilAdmin)
 admin.site.register(ProfilGuru)
 admin.site.register(ProfilSiswa)

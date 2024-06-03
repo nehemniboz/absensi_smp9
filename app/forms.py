@@ -298,7 +298,7 @@ class AbsensiUpdateForm(AbsensiBaseForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('username',)
+        fields = ('username', "email")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
