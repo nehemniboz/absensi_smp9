@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from .resources import AbsensiResource
 from django.db.models import Q
 from .forms import UserCreateForm, UserUpdateForm, ProfilAdminCreateForm, ProfilAdminUpdateForm, ProfilGuruCreateForm, ProfilGuruUpdateForm, ProfilSiswaCreateForm, ProfilSiswaUpdateForm, AngkatanCreateForm, AngkatanUpdateForm, JadwalUpdateForm, AbsensiCreateForm, AbsensiUpdateForm, UserProfileForm
@@ -41,10 +41,26 @@ def index(request):
 
     return render(request, 'index.html', context)
 
+def get_current_time():
+    return datetime.datetime.now().time()
+
+def is_time_out_of_range(jadwal_time):
+    current_time = get_current_time()
+    time_before = (datetime.datetime.combine(datetime.date.today(), jadwal_time) - datetime.timedelta(hours=1)).time()
+    
+    time_after = (datetime.datetime.combine(datetime.date.today(), jadwal_time) + datetime.timedelta(hours=1)).time()
+    print(time_after)
+    print(current_time)
+    print(time_before)
+    return not (time_before <= current_time <= time_after)
 
 def absen(request, jadwal):
     # Get the Jadwal object based on the jadwal parameter
     jadwal_object = get_object_or_404(Jadwal, nama__iexact=jadwal)
+
+    if is_time_out_of_range(jadwal_object.waktu):
+        messages.error(request, "Kamu hanya bisa melakukan absensi dalam 1 jam sebelum atau setelah waktu yang dijadwalkan.")
+        return redirect('index')  # Replace 'some_view_name' with the actual view you want to redirect to
 
     context = {
         'jadwal': jadwal_object
@@ -256,14 +272,14 @@ def delete_profil_admin(request, pk):
 
 
 @login_required
-@check_group(['ADMIN', 'GURU'])
+@check_group(['ADMIN'])
 def index_profil_guru(request):
     profil_gurus = ProfilGuru.objects.all()
     return render(request, 'index_profil_guru.html', {'profil_gurus': profil_gurus})
 
 
 @login_required
-@check_group(['ADMIN', 'GURU'])
+@check_group(['ADMIN'])
 def create_profil_guru(request):
     if request.method == 'POST':
         form = ProfilGuruCreateForm(request.POST)
@@ -277,7 +293,7 @@ def create_profil_guru(request):
 
 
 @login_required
-@check_group(['ADMIN', 'GURU'])
+@check_group(['ADMIN'])
 def update_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     if request.method == 'POST':
@@ -292,7 +308,7 @@ def update_profil_guru(request, pk):
 
 
 @login_required
-@check_group(['ADMIN', 'GURU'])
+@check_group(['ADMIN'])
 def delete_profil_guru(request, pk):
     profil_guru = get_object_or_404(ProfilGuru, pk=pk)
     profil_guru.delete()
@@ -489,7 +505,7 @@ def export_absensi(request):
     dataset = absensi_resource.export(queryset=absensi_queryset)
 
     # Get the current date
-    current_date = datetime.now().strftime("%d-%m-%Y")
+    current_date = datetime.datetime.now().strftime("%d-%m-%Y")
 
     # Construct the filename with the current date
     filename = f"Absensi_{current_date}.xls"

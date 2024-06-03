@@ -24,6 +24,15 @@
           <div class="row">
             <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1">
               <div class="login-brand">Stisla</div>
+
+              {% if messages %}
+                <div id="message-container" style="display:none;">
+                  {% for message in messages %}
+                    <div class="message" data-message-type="{{ message.tags }}" data-message-content="{{ message }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
               {% block content_index %}
 
               {% endblock %}
@@ -48,15 +57,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!--        
+    <!--           
     JSPM Generator Import Map
     Edit URL: https://generator.jspm.io/#U2NjYGBkDM0rySzJSU1hcKiqyMxL18/JTCpKLKp0MNAzMtQzAABgbxE9JAA
-          -->
+             -->
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script>
+      $(document).ready(function () {
+        // Check for messages and display using SweetAlert
+        $('#message-container .message').each(function () {
+          var messageType = $(this).data('message-type')
+          var messageContent = $(this).data('message-content')
+          Swal.fire({
+            icon: messageType,
+            title: messageType.charAt(0).toUpperCase() + messageType.slice(1),
+            text: messageContent
+          })
+        })
+      })
+    </script>
     {% block page_js %}
+
     {% endblock %}
   </body>
 </html>

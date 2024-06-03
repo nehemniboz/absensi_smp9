@@ -115,7 +115,7 @@ class Absensi(models.Model):
     tanggal = models.DateField(auto_now_add=True)
     waktu = models.TimeField(default=get_current_time)
     status = models.CharField(max_length=10, choices=[
-                              ('hadir', 'Hadir'), ('absen', 'Absen')])
+                              ('hadir', 'Hadir'), ('terlambat', 'Terlambat')])
 
     class Meta:
         unique_together = ('profil_siswa', 'jadwal', 'tanggal')
@@ -128,10 +128,10 @@ class Absensi(models.Model):
             if current_time < jadwal_time:
                 self.status = 'hadir'
             else:
-                self.status = 'absen'
+                self.status = 'terlambat'
         elif self.jadwal.nama.lower() == 'pulang':
             if current_time < jadwal_time:
-                self.status = 'absen'
+                self.status = 'terlambat'
             else:
                 self.status = 'hadir'
 

@@ -8,22 +8,21 @@
       <h4>Lorem</h4>
     </div>
 
-<div class="card-body text-center">
-  <div class="row justify-content-center mb-4">
-    <div class="col">
-      <a href="{% url 'absen' 'masuk' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Masuk</a>
+    <div class="card-body text-center">
+      <div class="row justify-content-center mb-4">
+        <div class="col">
+          <a href="{% url 'absen' 'masuk' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Masuk</a>
+        </div>
+        <div class="col">
+          <a href="{% url 'absen' 'pulang' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Pulang</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <a href="{% url 'login' %}" class="btn btn-lg btn-success rounded-pill px-5 py-3">Login</a>
+        </div>
+      </div>
     </div>
-    <div class="col">
-      <a href="{% url 'absen' 'pulang' %}" class="btn btn-lg btn-primary rounded-pill px-5 py-3">Pulang</a>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <a href="{% url 'login' %}" class="btn btn-lg btn-success rounded-pill px-5 py-3">Login</a>
-    </div>
-  </div>
-</div>
-
   </div>
 {% endblock %}
 
